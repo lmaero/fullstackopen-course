@@ -1,0 +1,68 @@
+title Exercise 0.4 by Luis Guzman - GitHub user: lmaero
+
+actor User
+participant Browser
+participant Server
+
+note over User:
+Write a note in the input and 
+press "Save" button to submit form
+end note
+
+User->Browser: Triggers form \naction="exampleapp/new_note" method="POST"
+Browser->Server: HTTP POST https://studies.cs.helsinki.fi/exampleapp/new_note
+
+note over Server:
+Server responds with 302 status
+code redirecting to /exampleapp/notes 
+and causing a new set of HTTP GET 
+requests
+end note
+
+Browser->Server: HTTP GET https://studies.cs.helsinki.fi/exampleapp/notes
+Server-->Browser: HTML- Main Page
+
+note over Browser:
+Reads HTML file, rendering DOM
+and triggering two new HTTP GET requests:
+
+<link rel="stylesheet" type="text/css" href="/exampleapp/main.css" />
+<script type="text/javascript" src="/exampleapp/main.js"></script>
+end note
+
+Browser->User: Renders DOM
+Browser->Server: HTTP GET https://studies.cs.helsinki.fi/exampleapp/main.css
+Server-->Browser: main.css
+
+note over Browser:
+Read styles from:
+<link rel="stylesheet" type="text/css" href="/exampleapp/main.css" />
+end note
+
+Browser->User: Applies and renders styles to DOM
+
+Browser->Server: HTTP GET https://studies.cs.helsinki.fi/exampleapp/main.js
+Server-->Browser: main.js
+
+note over Browser:
+Browser executes main.js script causing a new request:
+
+xhttp.open("GET", "/exampleapp/data.json", true)
+end note
+
+Browser->Server: HTTP GET https://studies.cs.helsinki.fi/exampleapp/data.json
+Server-->Browser: [{"content":"OMAI WA MOO SHINDEIRU","date":"2021-03-30T10:30:09.009Z"}, ...]
+
+note over Browser:
+Browser executes event handler:
+
+xhttp.onreadystatechange = function () {
+  if (this.readyState == 4 && this.status == 200) {
+    const data = JSON.parse(this.responseText)
+    console.log(data)
+    
+Logging data to the console and modifying the DOM,
+inserting the obtained data from data.json
+end note
+
+Browser->User: Renders data injected from data.json
