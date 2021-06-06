@@ -1,0 +1,54 @@
+title Exercise 0.5 by Luis Guzman - GitHub user: lmaero
+
+actor User
+participant Browser
+participant Server
+
+User->Browser: Navigate to https://studies.cs.helsinki.fi/exampleapp/spa
+
+Browser->Server: HTTP GET https://studies.cs.helsinki.fi/exampleapp/spa
+Server-->Browser: HTML- Main Page
+
+note over Browser:
+Reads HTML file, rendering DOM
+and triggering two new HTTP GET requests:
+
+<link rel="stylesheet" type="text/css" href="/exampleapp/main.css" />
+<script type="text/javascript" src="/exampleapp/spa.js"></script>
+end note
+
+Browser->User: Renders DOM
+Browser->Server: HTTP GET https://studies.cs.helsinki.fi/exampleapp/main.css
+Server-->Browser: main.css
+
+note over Browser:
+Read styles from:
+<link rel="stylesheet" type="text/css" href="/exampleapp/main.css" />
+end note
+
+Browser->User: Applies and renders styles to DOM
+
+Browser->Server: HTTP GET https://studies.cs.helsinki.fi/exampleapp/spa.js
+Server-->Browser: spa.js
+
+note over Browser:
+Browser executes spa.js script causing a new request:
+
+xhttp.open("GET", "/exampleapp/data.json", true)
+end note
+
+Browser->Server: HTTP GET https://studies.cs.helsinki.fi/exampleapp/data.json
+Server-->Browser: [{"content":"go starship go !","date":"2021-03-30T12:37:22.412Z"}, ...]
+
+note over Browser:
+Browser executes event handler, setting:
+
+notes = JSON.parse(this.responseText)
+
+... and executing:
+redrawNotes()
+    
+Modifying the DOM, inserting the obtained data from data.json
+end note
+
+Browser->User: Renders data injected from data.json
