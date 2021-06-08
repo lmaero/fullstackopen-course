@@ -16,7 +16,6 @@
 *.sig
 
 pkg/
-src/
 
 ### CypressIO ###
 # gitignore template for the CypressIO, browser test framework
