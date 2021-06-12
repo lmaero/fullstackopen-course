@@ -12,6 +12,14 @@ const App = () => {
   ];
 
   const [selected, setSelected] = useState(0);
+  /*
+  WITH OBJECTS
+  const [votes, setVotes] = useState({});
+  */
+
+  // WITH ARRAYS
+  const zeroFilledVotes = new Array(anecdotes.length).fill(0);
+  const [votes, setVotes] = useState(zeroFilledVotes);
 
   function generateRandom(length) {
     let randomNumber = Math.floor(Math.random() * length);
@@ -24,11 +32,35 @@ const App = () => {
     return randomNumber;
   }
 
+  function increaseVote() {
+    /* 
+    WITH OBJECTS
+    const votesCopy = { ...votes };
+
+    if (isNaN(votesCopy[selected])) votesCopy[selected] = 0;
+
+    votesCopy[selected] += 1;
+    setVotes(votesCopy); 
+    */
+
+    // WITH ARRAYS
+    const votesCopy = [...votes];
+
+    if (isNaN(votesCopy[selected])) votesCopy[selected] = 0;
+
+    votesCopy[selected] += 1;
+    setVotes(votesCopy);
+  }
+
   return (
     <React.StrictMode>
       <React.Fragment>
         <h1>Anecdotes</h1>
         <p>{anecdotes[selected]}</p>
+        <p>has {isNaN(votes[selected]) ? 0 : votes[selected]} votes</p>
+
+        <button onClick={increaseVote}>vote</button>
+
         <button onClick={() => setSelected(generateRandom(anecdotes.length))}>
           next anecdote
         </button>
