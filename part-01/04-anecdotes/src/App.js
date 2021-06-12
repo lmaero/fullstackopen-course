@@ -12,14 +12,15 @@ const App = () => {
   ];
 
   const [selected, setSelected] = useState(0);
-  /*
-  WITH OBJECTS
-  const [votes, setVotes] = useState({});
-  */
 
-  // WITH ARRAYS
+  //WITH OBJECTS
+  const [votes, setVotes] = useState({});
+
+  /* 
+  WITH ARRAYS
   const zeroFilledVotes = new Array(anecdotes.length).fill(0);
-  const [votes, setVotes] = useState(zeroFilledVotes);
+  const [votes, setVotes] = useState(zeroFilledVotes); 
+  */
 
   function generateRandom(length) {
     let randomNumber = Math.floor(Math.random() * length);
@@ -33,29 +34,42 @@ const App = () => {
   }
 
   function increaseVote() {
-    /* 
-    WITH OBJECTS
+    //WITH OBJECTS
     const votesCopy = { ...votes };
 
     if (isNaN(votesCopy[selected])) votesCopy[selected] = 0;
 
     votesCopy[selected] += 1;
-    setVotes(votesCopy); 
-    */
+    setVotes(votesCopy);
 
-    // WITH ARRAYS
+    /* 
+    WITH ARRAYS
     const votesCopy = [...votes];
 
     if (isNaN(votesCopy[selected])) votesCopy[selected] = 0;
 
     votesCopy[selected] += 1;
     setVotes(votesCopy);
+    */
+  }
+
+  function indexOfMostVoted() {
+    // WITH OBJECTS
+    const mostVoted = Math.max(...Object.values(votes));
+    return Object.keys(votes).find((key) => votes[key] === mostVoted);
+
+    /*
+    WITH ARRAYS
+    return votes.indexOf(Math.max(...votes));
+    */
   }
 
   return (
     <React.StrictMode>
       <React.Fragment>
         <h1>Anecdotes</h1>
+
+        <h2>Anecdote of the day</h2>
         <p>{anecdotes[selected]}</p>
         <p>has {isNaN(votes[selected]) ? 0 : votes[selected]} votes</p>
 
@@ -64,6 +78,22 @@ const App = () => {
         <button onClick={() => setSelected(generateRandom(anecdotes.length))}>
           next anecdote
         </button>
+
+        <h2>Anecdote with most votes</h2>
+        {/* WITH OBJECTS */}
+        <p>{anecdotes[indexOfMostVoted()]}</p>
+        <p>
+          {votes[indexOfMostVoted()] === undefined
+            ? 'All anecdotes have 0 votes'
+            : `has ${votes[indexOfMostVoted()]} votes`}
+        </p>
+
+        {/*
+        WITH ARRAYS
+
+        <p>{anecdotes[indexOfMostVoted()]}</p>
+        <p>has {votes[indexOfMostVoted()]} votes</p>
+        */}
       </React.Fragment>
     </React.StrictMode>
   );
