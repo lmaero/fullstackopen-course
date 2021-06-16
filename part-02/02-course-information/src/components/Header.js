@@ -4,7 +4,7 @@ const Header = ({ courseName }) => {
   return (
     <React.StrictMode>
       <React.Fragment>
-        <h1>{courseName}</h1>
+        <h2>{courseName}</h2>
       </React.Fragment>
     </React.StrictMode>
   );
