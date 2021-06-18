@@ -2,7 +2,7 @@ import React from 'react';
 import CountriesList from './CountriesList';
 import Country from './Country';
 
-const Countries = ({ countriesData, filterValue }) => {
+const Countries = ({ countriesData, filterValue, setFilterValue }) => {
   function showCountries() {
     if (countriesData.length === 0)
       return <p>Loading countries information...</p>;
@@ -19,7 +19,12 @@ const Countries = ({ countriesData, filterValue }) => {
       return <p>Too many matches, specify a filter above</p>;
 
     if (countriesLength > 1 && countriesLength <= 10)
-      return <CountriesList countries={filteredList} />;
+      return (
+        <CountriesList
+          countries={filteredList}
+          setFilterValue={setFilterValue}
+        />
+      );
 
     if (countriesLength === 1) return <Country country={filteredList[0]} />;
   }

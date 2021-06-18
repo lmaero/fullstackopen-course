@@ -20,7 +20,11 @@ const App = () => {
 
         <Filter filterValue={filterValue} setFilterValue={setFilterValue} />
 
-        <Countries countriesData={countriesData} filterValue={filterValue} />
+        <Countries
+          countriesData={countriesData}
+          filterValue={filterValue}
+          setFilterValue={setFilterValue}
+        />
       </React.Fragment>
     </React.StrictMode>
   );
