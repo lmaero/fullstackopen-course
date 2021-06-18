@@ -16,17 +16,34 @@ const App = () => {
       .then((initialPersons) => setPersons(initialPersons));
   }, []);
 
+  function verifyExistence() {
+    return persons.find((p) => p.name.toLowerCase() === newName.toLowerCase());
+  }
+
+  function updatePerson(originalPerson) {
+    const personObject = { ...originalPerson, number: newNumber };
+
+    personsService
+      .update(originalPerson.id, personObject)
+      .then((returnedPerson) => {
+        setPersons(
+          persons.map((p) => (p.id === returnedPerson.id ? returnedPerson : p)),
+        );
+        setNewName('');
+        setNewNumber('');
+      });
+  }
+
   const addPerson = (event) => {
     event.preventDefault();
+    const existingContact = verifyExistence();
 
-    const isExistingContact = persons.find(
-      (person) => person.name.toLowerCase() === newName.toLowerCase(),
-    );
+    if (existingContact) {
+      const isUpdateConfirmed = window.confirm(
+        `${newName} is already added to phonebook, replace the old number?`,
+      );
 
-    if (isExistingContact) {
-      alert(`${newName} is already added to phonebook`);
-      setNewName('');
-      return;
+      return isUpdateConfirmed ? updatePerson(existingContact) : null;
     } else {
       const personObject = {
         name: newName,
