@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Filter from './components/Filter';
+import Notification from './components/Notification';
 import PersonForm from './components/PersonForm';
 import Persons from './components/Persons';
 import personsService from './services/persons';
@@ -9,6 +10,8 @@ const App = () => {
   const [newName, setNewName] = useState('');
   const [newNumber, setNewNumber] = useState('');
   const [filter, setFilter] = useState('');
+  const [notificationMessage, setNotificationMessage] = useState(null);
+  const [notificationType, setNotificationType] = useState(null);
 
   useEffect(() => {
     personsService
@@ -42,6 +45,7 @@ const App = () => {
       const isUpdateConfirmed = window.confirm(
         `${newName} is already added to phonebook, replace the old number?`,
       );
+      showNotification(`Updated ${newName}`, 'success');
 
       return isUpdateConfirmed ? updatePerson(existingContact) : null;
     } else {
@@ -54,6 +58,7 @@ const App = () => {
         setPersons(persons.concat(returnedPerson));
         setNewName('');
         setNewNumber('');
+        showNotification(`Added ${returnedPerson.name}`, 'success');
       });
     }
   };
@@ -61,11 +66,10 @@ const App = () => {
   const deletePerson = (person) => {
     const isConfirmed = window.confirm(`Delete ${person.name}?`);
     if (isConfirmed)
-      personsService
-        .deletePerson(person.id)
-        .then(() =>
-          setPersons(persons.filter((p) => (p.id === person.id ? null : p))),
-        );
+      personsService.deletePerson(person.id).then(() => {
+        setPersons(persons.filter((p) => (p.id === person.id ? null : p)));
+        showNotification(`Deleted ${person.name}`, 'error');
+      });
   };
 
   const handleNameChange = (event) => {
@@ -89,10 +93,21 @@ const App = () => {
     return persons;
   }
 
+  function showNotification(message, type) {
+    setNotificationMessage(message);
+    setNotificationType(type);
+
+    setTimeout(() => {
+      setNotificationMessage(null);
+      setNotificationType(null);
+    }, 3000);
+  }
+
   return (
     <React.StrictMode>
       <React.Fragment>
         <h1>Phonebook App</h1>
+        <Notification message={notificationMessage} type={notificationType} />
 
         <Filter filter={filter} handleFilterChange={handleFilterChange} />
 

@@ -11,3 +11,26 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.notification {
+  border-radius: 0.5em;
+  font-size: 1em;
+  margin: 1em;
+  min-width: 200px;
+  padding: 1em;
+  text-align: center;
+  text-transform: uppercase;
+  max-width: 40%;
+}
+
+.error {
+  background-color: hsl(0, 100%, 90%);
+  border: 3px solid;
+  color: hsl(0, 100%, 50%);
+}
+
+.success {
+  background-color: hsl(120, 100%, 90%);
+  border: 3px solid;
+  color: hsl(120, 100%, 25%);
+}
