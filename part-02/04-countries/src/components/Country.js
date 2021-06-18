@@ -1,4 +1,5 @@
 import React from 'react';
+import Weather from './Weather';
 
 const Country = ({ country }) => {
   const { name, capital, population, languages, flag } = country;
@@ -26,6 +27,8 @@ const Country = ({ country }) => {
         </ul>
 
         <img src={flag} alt={`${name}'s flag`} style={{ width: '150px' }} />
+
+        <Weather capital={capital} />
       </React.Fragment>
     </React.StrictMode>
   );
