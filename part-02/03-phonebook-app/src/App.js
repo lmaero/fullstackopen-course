@@ -41,6 +41,16 @@ const App = () => {
     }
   };
 
+  const deletePerson = (person) => {
+    const isConfirmed = window.confirm(`Delete ${person.name}?`);
+    if (isConfirmed)
+      personsService
+        .deletePerson(person.id)
+        .then(() =>
+          setPersons(persons.filter((p) => (p.id === person.id ? null : p))),
+        );
+  };
+
   const handleNameChange = (event) => {
     setNewName(event.target.value);
   };
@@ -79,7 +89,10 @@ const App = () => {
         />
 
         <h2>Numbers</h2>
-        <Persons filterNumbersList={filterNumbersList} />
+        <Persons
+          filterNumbersList={filterNumbersList}
+          deletePerson={deletePerson}
+        />
       </React.Fragment>
     </React.StrictMode>
   );
