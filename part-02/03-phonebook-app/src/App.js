@@ -32,9 +32,17 @@ const App = () => {
         setPersons(
           persons.map((p) => (p.id === returnedPerson.id ? returnedPerson : p)),
         );
-        setNewName('');
-        setNewNumber('');
+      })
+      .catch(() => {
+        showNotification(
+          `Information of ${originalPerson.name} has already been removed from server`,
+          'error',
+        );
+        setPersons(persons.filter((p) => p.id !== originalPerson.id));
       });
+
+    setNewName('');
+    setNewNumber('');
   }
 
   const addPerson = (event) => {
@@ -66,10 +74,19 @@ const App = () => {
   const deletePerson = (person) => {
     const isConfirmed = window.confirm(`Delete ${person.name}?`);
     if (isConfirmed)
-      personsService.deletePerson(person.id).then(() => {
-        setPersons(persons.filter((p) => (p.id === person.id ? null : p)));
-        showNotification(`Deleted ${person.name}`, 'error');
-      });
+      personsService
+        .deletePerson(person.id)
+        .then(() => {
+          setPersons(persons.filter((p) => (p.id === person.id ? null : p)));
+          showNotification(`Deleted ${person.name}`, 'error');
+        })
+        .catch(() => {
+          showNotification(
+            `Information of ${person.name} has already been removed from server`,
+            'error',
+          );
+          setPersons(persons.filter((p) => p.id !== person.id));
+        });
   };
 
   const handleNameChange = (event) => {
