@@ -54,6 +54,29 @@ app.delete('/api/persons/:id', (request, response) => {
   response.status(204).end();
 });
 
+function generateRandomID() {
+  return Math.floor(Math.random() * 100_000_000);
+}
+
+app.post('/api/persons/', (request, response) => {
+  const { name, number } = request.body;
+
+  if (!name || !number)
+    response
+      .status(400)
+      .json({ Error: 'You must provide a name and a number' });
+  else {
+    const newPerson = {
+      name,
+      number,
+      id: generateRandomID(),
+    };
+
+    persons = persons.concat(newPerson);
+    response.status(201).json(newPerson);
+  }
+});
+
 const PORT = 3001;
 app.listen(PORT);
 console.log(`Phonebook API running on port ${3001}`);
