@@ -62,19 +62,29 @@ app.post('/api/persons/', (request, response) => {
   const { name, number } = request.body;
 
   if (!name || !number)
-    response
+    return response
       .status(400)
-      .json({ Error: 'You must provide a name and a number' });
-  else {
-    const newPerson = {
-      name,
-      number,
-      id: generateRandomID(),
-    };
+      .json({ Error: 'You must provide a name and a number' })
+      .end();
 
-    persons = persons.concat(newPerson);
-    response.status(201).json(newPerson);
-  }
+  const existingPerson = persons.find(
+    (person) => person.name.toLowerCase() === name.toLowerCase(),
+  );
+
+  if (existingPerson)
+    return response
+      .status(400)
+      .json({ Error: 'Name must be unique, person already exists' })
+      .end();
+
+  const newPerson = {
+    name,
+    number,
+    id: generateRandomID(),
+  };
+
+  persons = persons.concat(newPerson);
+  response.status(201).json(newPerson);
 });
 
 const PORT = 3001;
