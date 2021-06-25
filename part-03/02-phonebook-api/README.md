@@ -1,5 +1,5 @@
 # Phonebook API
 
-[Heroku API Info](https://lmaero-fso-phonebook-api.herokuapp.com/info)
+[Phonebook APP](https://lmaero-fso-phonebook-api.herokuapp.com/)
 
-[Heroku API Persons](https://lmaero-fso-phonebook-api.herokuapp.com/api/persons)
+[Phonebook API Persons](https://lmaero-fso-phonebook-api.herokuapp.com/api/persons)
