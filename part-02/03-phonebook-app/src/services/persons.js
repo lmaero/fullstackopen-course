@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const baseUrl = 'https://lmaero-fso-phonebook-api.herokuapp.com/api/persons';
+const baseUrl = '/api/persons';
 
 function getAll() {
   const request = axios.get(baseUrl);
