@@ -6,7 +6,10 @@
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build:ui": "rm -rf build && cd ../../part-02/01-notes-app/ && npm run build --prod && cp -r build ../../part-03/01-notes-api/",
+    "deploy": "cd ../../ git subtree push --prefix part-03/01-notes-api heroku main",
+    "deploy:full": "npm run build:ui && git add . && git commit -m 'UI build' && git push origin main && npm run deploy"
   },
   "author": "Luis Guzman",
   "license": "MIT",
