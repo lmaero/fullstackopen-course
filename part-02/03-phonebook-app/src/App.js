@@ -58,23 +58,27 @@ const App = () => {
         ? updatePerson(existingContact)
         : showNotification('Action canceled by user', 'error');
     } else {
-      const personObject = {
-        name: newName,
-        number: newNumber,
-      };
+      if (!newName || !newNumber) {
+        showNotification('Missing name or number', 'error');
+      } else {
+        const personObject = {
+          name: newName,
+          number: newNumber,
+        };
 
-      personsService.create(personObject).then((returnedPerson) => {
-        setPersons(persons.concat(returnedPerson));
-        setNewName('');
-        setNewNumber('');
-        showNotification(`Added ${returnedPerson.name}`, 'success');
-      });
+        personsService.create(personObject).then((returnedPerson) => {
+          setPersons(persons.concat(returnedPerson));
+          setNewName('');
+          setNewNumber('');
+          showNotification(`Added ${returnedPerson.name}`, 'success');
+        });
+      }
     }
   };
 
   const deletePerson = (person) => {
     const isConfirmed = window.confirm(`Delete ${person.name}?`);
-    if (isConfirmed)
+    if (isConfirmed) {
       personsService
         .deletePerson(person.id)
         .then(() => {
@@ -88,6 +92,9 @@ const App = () => {
           );
           setPersons(persons.filter((p) => p.id !== person.id));
         });
+    } else {
+      showNotification('Deletion canceled by user', 'error');
+    }
   };
 
   const handleNameChange = (event) => {
