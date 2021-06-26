@@ -49,37 +49,29 @@ app.delete('/api/persons/:id', (request, response) => {
   response.status(204).end();
 });
 
-function generateRandomID() {
-  return Math.floor(Math.random() * 100_000_000);
-}
-
 app.post('/api/persons/', (request, response) => {
-  const { name, number } = request.body;
+  const { name, number, id } = request.body;
+  console.log(request.body);
 
-  if (!name || !number)
+  if (!name || !number) {
+    console.log(`Name: ${name} Number: ${number}`);
     return response
       .status(400)
-      .json({ Error: 'You must provide a name and a number' })
-      .end();
+      .json({ Error: 'You must provide a name and a number' });
+  }
 
-  const existingPerson = persons.find(
-    (person) => person.name.toLowerCase() === name.toLowerCase(),
-  );
+  if (Person.findById(id)) {
+    console.log(`My person to update is: ${name}`);
+  }
 
-  if (existingPerson)
-    return response
-      .status(400)
-      .json({ Error: 'Name must be unique, person already exists' })
-      .end();
-
-  const newPerson = {
+  const newPerson = new Person({
     name,
     number,
-    id: generateRandomID(),
-  };
+  });
 
-  persons = persons.concat(newPerson);
-  response.status(201).json(newPerson);
+  newPerson.save().then((savedPerson) => {
+    response.status(201).json(savedPerson);
+  });
 });
 
 const PORT = process.env.PORT;

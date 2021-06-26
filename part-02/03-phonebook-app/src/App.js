@@ -32,6 +32,7 @@ const App = () => {
         setPersons(
           persons.map((p) => (p.id === returnedPerson.id ? returnedPerson : p)),
         );
+        showNotification(`Updated ${returnedPerson.name}`, 'success');
       })
       .catch(() => {
         showNotification(
@@ -53,9 +54,9 @@ const App = () => {
       const isUpdateConfirmed = window.confirm(
         `${newName} is already added to phonebook, replace the old number?`,
       );
-      showNotification(`Updated ${newName}`, 'success');
-
-      return isUpdateConfirmed ? updatePerson(existingContact) : null;
+      return isUpdateConfirmed
+        ? updatePerson(existingContact)
+        : showNotification('Action canceled by user', 'error');
     } else {
       const personObject = {
         name: newName,
