@@ -23,12 +23,6 @@ app.use(
 app.post('/api/persons/', (request, response, next) => {
   const { name, number, id } = request.body;
 
-  if (!name || !number) {
-    return response
-      .status(400)
-      .json({ Error: 'You must provide a name and a number' });
-  }
-
   const newPerson = new Person({
     name,
     number,
@@ -96,6 +90,9 @@ const errorHandler = (error, request, response, next) => {
 
   if (error.name === 'CastError') {
     return response.status(400).send({ error: 'Malformed ID' });
+  }
+  if (error.name === 'ValidationError') {
+    return response.status(400).send({ error: error.message });
   }
 
   next(error);
