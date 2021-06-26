@@ -72,9 +72,15 @@ app.put('/api/persons/:id', (request, response, next) => {
     number,
   };
 
-  Person.findByIdAndUpdate(id, updatedPerson, { new: true })
+  Person.findByIdAndUpdate(id, updatedPerson, {
+    new: true,
+    runValidators: true,
+    context: 'query',
+  })
     .then((returnedPerson) => response.status(200).json(returnedPerson))
-    .catch((error) => next(error));
+    .catch((error) => {
+      next(error);
+    });
 });
 
 app.delete('/api/persons/:id', (request, response, next) => {

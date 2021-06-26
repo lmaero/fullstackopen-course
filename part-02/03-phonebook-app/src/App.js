@@ -34,13 +34,7 @@ const App = () => {
         );
         showNotification(`Updated ${returnedPerson.name}`, 'success');
       })
-      .catch(() => {
-        showNotification(
-          `Information of ${originalPerson.name} has already been removed from server`,
-          'error',
-        );
-        setPersons(persons.filter((p) => p.id !== originalPerson.id));
-      });
+      .catch((error) => showNotification(error.response.data.error, 'error'));
 
     setNewName('');
     setNewNumber('');
@@ -58,21 +52,20 @@ const App = () => {
         ? updatePerson(existingContact)
         : showNotification('Action canceled by user', 'error');
     } else {
-      if (!newName || !newNumber) {
-        showNotification('Missing name or number', 'error');
-      } else {
-        const personObject = {
-          name: newName,
-          number: newNumber,
-        };
+      const personObject = {
+        name: newName,
+        number: newNumber,
+      };
 
-        personsService.create(personObject).then((returnedPerson) => {
+      personsService
+        .create(personObject)
+        .then((returnedPerson) => {
           setPersons(persons.concat(returnedPerson));
           setNewName('');
           setNewNumber('');
           showNotification(`Added ${returnedPerson.name}`, 'success');
-        });
-      }
+        })
+        .catch((error) => showNotification(error.response.data.error, 'error'));
     }
   };
 
@@ -125,7 +118,7 @@ const App = () => {
     setTimeout(() => {
       setNotificationMessage(null);
       setNotificationType(null);
-    }, 3000);
+    }, 5000);
   }
 
   return (
