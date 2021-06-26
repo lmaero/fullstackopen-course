@@ -45,7 +45,7 @@ app.post('/api/persons/', (request, response, next) => {
 app.get('/info', (request, response, next) => {
   Person.find({})
     .then((persons) => {
-      response.send(`
+      response.status(200).send(`
       <h1>Phonebook API Info</h1>
       <p>Phonebook has info for ${persons.length} people</p>
       <p>${new Date()}</p>
