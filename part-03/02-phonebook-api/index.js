@@ -20,6 +20,31 @@ app.use(
   ),
 );
 
+app.post('/api/persons/', (request, response) => {
+  const { name, number, id } = request.body;
+  console.log(request.body);
+
+  if (!name || !number) {
+    console.log(`Name: ${name} Number: ${number}`);
+    return response
+      .status(400)
+      .json({ Error: 'You must provide a name and a number' });
+  }
+
+  if (Person.findById(id)) {
+    console.log(`My person to update is: ${name}`);
+  }
+
+  const newPerson = new Person({
+    name,
+    number,
+  });
+
+  newPerson.save().then((savedPerson) => {
+    response.status(201).json(savedPerson);
+  });
+});
+
 app.get('/info', (request, response) => {
   Person.find({}).then((persons) => {
     response.send(`
@@ -43,34 +68,8 @@ app.get('/api/persons/:id', (request, response) => {
 });
 
 app.delete('/api/persons/:id', (request, response) => {
-  const personId = Number(request.params.id);
-  persons = persons.filter((person) => person.id !== personId);
-
-  response.status(204).end();
-});
-
-app.post('/api/persons/', (request, response) => {
-  const { name, number, id } = request.body;
-  console.log(request.body);
-
-  if (!name || !number) {
-    console.log(`Name: ${name} Number: ${number}`);
-    return response
-      .status(400)
-      .json({ Error: 'You must provide a name and a number' });
-  }
-
-  if (Person.findById(id)) {
-    console.log(`My person to update is: ${name}`);
-  }
-
-  const newPerson = new Person({
-    name,
-    number,
-  });
-
-  newPerson.save().then((savedPerson) => {
-    response.status(201).json(savedPerson);
+  Person.findByIdAndRemove(request.params.id).then(() => {
+    response.status(204).end();
   });
 });
 
