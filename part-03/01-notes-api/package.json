@@ -10,7 +10,9 @@
     "build:ui": "rm -rf build && cd ../../part-02/01-notes-app/ && npm run build --prod && cp -r build ../../part-03/01-notes-api/",
     "deploy": "cd ../../ && git subtree push --prefix part-03/01-notes-api heroku-notes-api main",
     "deploy:full": "npm run build:ui && git add . && git commit -m 'UI build' && git push origin main && npm run deploy",
-    "logs:prod": "heroku logs --tail"
+    "logs:prod": "heroku logs --tail",
+    "init:lint": "eslint --init",
+    "lint": "eslint ."
   },
   "author": "Luis Guzman",
   "license": "MIT",
@@ -21,6 +23,7 @@
     "mongoose": "^5.12.15"
   },
   "devDependencies": {
+    "eslint": "^7.29.0",
     "nodemon": "^2.0.7"
   }
 }
