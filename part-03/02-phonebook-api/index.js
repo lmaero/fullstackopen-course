@@ -1,8 +1,9 @@
 require('dotenv').config();
 const express = require('express');
-const app = express();
 const morgan = require('morgan');
 const cors = require('cors');
+
+const app = express();
 
 const Person = require('./models/person');
 
@@ -10,9 +11,7 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static('build'));
 
-morgan.token('post-body', function (request, response) {
-  return JSON.stringify(request.body);
-});
+morgan.token('post-body', (request) => JSON.stringify(request.body));
 
 app.use(
   morgan(
@@ -21,7 +20,7 @@ app.use(
 );
 
 app.post('/api/persons/', (request, response, next) => {
-  const { name, number, id } = request.body;
+  const { name, number } = request.body;
 
   const newPerson = new Person({
     name,
@@ -65,7 +64,7 @@ app.get('/api/persons/:id', (request, response, next) => {
 });
 
 app.put('/api/persons/:id', (request, response, next) => {
-  const id = request.params.id;
+  const { id } = request.params;
   const { name, number } = request.body;
   const updatedPerson = {
     name,
@@ -92,8 +91,6 @@ app.delete('/api/persons/:id', (request, response, next) => {
 });
 
 const errorHandler = (error, request, response, next) => {
-  console.log(error.message);
-
   if (error.name === 'CastError') {
     return response.status(400).send({ error: 'Malformed ID' });
   }
@@ -101,12 +98,13 @@ const errorHandler = (error, request, response, next) => {
     return response.status(400).send({ error: error.message });
   }
 
-  next(error);
+  return next(error);
 };
 
 app.use(errorHandler);
 
-const PORT = process.env.PORT;
+const { PORT } = process.env;
 app.listen(PORT, () => {
+  // eslint-disable-next-line no-console
   console.log(`Phonebook API running on port ${PORT}`);
 });

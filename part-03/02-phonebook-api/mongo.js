@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 const mongoose = require('mongoose');
 
 const [, , password, name, number] = process.argv;
@@ -23,6 +24,7 @@ const personSchema = new mongoose.Schema({
   number: String,
 });
 
+// eslint-disable-next-line new-cap
 const Person = new mongoose.model('Person', personSchema);
 
 if (password && !name && !number) {

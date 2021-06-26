@@ -1,7 +1,9 @@
+/* eslint-disable no-underscore-dangle */
 const mongoose = require('mongoose');
 const uniqueValidator = require('mongoose-unique-validator');
 
 const url = process.env.MONGODB_URI;
+// eslint-disable-next-line no-console
 console.log(`Connecting to ${url}`);
 
 mongoose
@@ -12,9 +14,11 @@ mongoose
     useUnifiedTopology: true,
   })
   .then(() => {
+    // eslint-disable-next-line no-console
     console.log('Connected to MongoDB');
   })
   .catch((error) => {
+    // eslint-disable-next-line no-console
     console.log(`Something went wrong: ${error.message}`);
   });
 
@@ -34,9 +38,10 @@ const personSchema = new mongoose.Schema({
 
 personSchema.set('toJSON', {
   transform: (document, returnedObject) => {
-    returnedObject.id = returnedObject._id.toString();
-    delete returnedObject._id;
-    delete returnedObject.__v;
+    const returned = returnedObject;
+    returned.id = returned._id.toString();
+    delete returned._id;
+    delete returned.__v;
   },
 });
 
