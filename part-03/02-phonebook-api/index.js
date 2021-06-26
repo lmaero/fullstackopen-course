@@ -20,19 +20,13 @@ app.use(
   ),
 );
 
-app.post('/api/persons/', (request, response) => {
+app.post('/api/persons/', (request, response, next) => {
   const { name, number, id } = request.body;
-  console.log(request.body);
 
   if (!name || !number) {
-    console.log(`Name: ${name} Number: ${number}`);
     return response
       .status(400)
       .json({ Error: 'You must provide a name and a number' });
-  }
-
-  if (Person.findById(id)) {
-    console.log(`My person to update is: ${name}`);
   }
 
   const newPerson = new Person({
@@ -40,38 +34,61 @@ app.post('/api/persons/', (request, response) => {
     number,
   });
 
-  newPerson.save().then((savedPerson) => {
-    response.status(201).json(savedPerson);
-  });
+  newPerson
+    .save()
+    .then((savedPerson) => {
+      response.status(201).json(savedPerson);
+    })
+    .catch((error) => next(error));
 });
 
-app.get('/info', (request, response) => {
-  Person.find({}).then((persons) => {
-    response.send(`
+app.get('/info', (request, response, next) => {
+  Person.find({})
+    .then((persons) => {
+      response.send(`
       <h1>Phonebook API Info</h1>
       <p>Phonebook has info for ${persons.length} people</p>
       <p>${new Date()}</p>
       `);
-  });
+    })
+    .catch((error) => next(error));
 });
 
-app.get('/api/persons', (request, response) => {
-  Person.find({}).then((persons) => {
-    response.json(persons);
-  });
+app.get('/api/persons', (request, response, next) => {
+  Person.find({})
+    .then((persons) => {
+      response.json(persons);
+    })
+    .catch((error) => next(error));
 });
 
-app.get('/api/persons/:id', (request, response) => {
-  Person.findById(request.params.id).then((person) => {
-    response.json(person);
-  });
+app.get('/api/persons/:id', (request, response, next) => {
+  Person.findById(request.params.id)
+    .then((person) => {
+      response.json(person);
+    })
+    .catch((error) => next(error));
 });
 
-app.delete('/api/persons/:id', (request, response) => {
-  Person.findByIdAndRemove(request.params.id).then(() => {
-    response.status(204).end();
-  });
+app.delete('/api/persons/:id', (request, response, next) => {
+  Person.findByIdAndRemove(request.params.id)
+    .then(() => {
+      response.status(204).end();
+    })
+    .catch((error) => next(error));
 });
+
+const errorHandler = (error, request, response, next) => {
+  console.log(error.message);
+
+  if (error.name === 'CastError') {
+    return response.status(400).send({ error: 'Malformed ID' });
+  }
+
+  next(error);
+};
+
+app.use(errorHandler);
 
 const PORT = process.env.PORT;
 app.listen(PORT, () => {
