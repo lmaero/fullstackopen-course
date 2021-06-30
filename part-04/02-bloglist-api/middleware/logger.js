@@ -1,3 +1,5 @@
+/* eslint-disable no-console */
+
 function info(...params) {
   console.info(...params);
 }
