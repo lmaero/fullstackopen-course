@@ -4,9 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
-    "dev": "nodemon index.js",
-    "test": "jest --verbose",
+    "start": "NODE_ENV=production node index.js",
+    "dev": "NODE_ENV=development nodemon index.js",
+    "test": "NODE_ENV=test jest --verbose --runInBand",
     "build:ui": "rm -rf build && cd ../../part-02/01-notes-app/ && npm run build --prod && cp -r build ../../part-03/01-notes-api/",
     "deploy": "cd ../../ && git subtree push --prefix part-03/01-notes-api heroku-notes-api main",
     "deploy:full": "npm run build:ui && git add . && git commit -m 'UI build' && git push origin main && npm run deploy",
@@ -23,11 +23,13 @@
     "cors": "^2.8.5",
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
+    "express-async-errors": "^3.1.1",
     "mongoose": "^5.12.15"
   },
   "devDependencies": {
     "eslint": "^7.29.0",
     "jest": "^27.0.6",
-    "nodemon": "^2.0.7"
+    "nodemon": "^2.0.7",
+    "supertest": "^6.1.3"
   }
 }
