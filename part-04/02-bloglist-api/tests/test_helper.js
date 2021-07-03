@@ -1,3 +1,4 @@
+const User = require('../../01-notes-api/models/user');
 const Blog = require('../models/blog');
 
 const initialBlogs = [
@@ -44,6 +45,11 @@ const blogsInDb = async () => {
   return blogs.map((blog) => blog.toJSON());
 };
 
+const usersInDb = async () => {
+  const users = await User.find({});
+  return users.map((user) => user.toJSON());
+};
+
 const nonExistingId = async () => {
   const blog = new Blog({
     url: 'https://non-existing.com',
@@ -58,4 +64,9 @@ const nonExistingId = async () => {
   return blog._id.toString();
 };
 
-module.exports = { initialBlogs, blogsInDb, nonExistingId };
+module.exports = {
+  initialBlogs,
+  blogsInDb,
+  usersInDb,
+  nonExistingId,
+};

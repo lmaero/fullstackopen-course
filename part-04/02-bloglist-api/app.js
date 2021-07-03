@@ -6,6 +6,7 @@ const config = require('./utils/config');
 const logger = require('./middleware/logger');
 const requestLogger = require('./middleware/requestLogger');
 const unknownEndpoint = require('./middleware/unknownEndpoint');
+const errorHandler = require('./middleware/errorHandler');
 
 const app = express();
 
@@ -34,5 +35,6 @@ app.use('/api/blogs', blogsRouter);
 app.use('/api/users', usersRouter);
 
 app.use(unknownEndpoint);
+app.use(errorHandler);
 
 module.exports = app;
