@@ -31,6 +31,27 @@ test('id property is defined', async () => {
   blogs.map((blog) => expect(blog.id).toBeDefined());
 });
 
+test('a blog can be added', async () => {
+  const newBlog = {
+    title: 'Amazing Page',
+    author: 'Luis Guzman',
+    url: 'https://lmaero.pro/',
+    likes: 5000,
+  };
+
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(201)
+    .expect('Content-Type', /application\/json/);
+
+  const blogsAtEnd = await helper.blogsInDb();
+  expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length + 1);
+
+  const authors = blogsAtEnd.map((blog) => blog.title);
+  expect(authors).toContain('Amazing Page');
+});
+
 afterAll(() => {
   mongoose.connection.close();
 });
