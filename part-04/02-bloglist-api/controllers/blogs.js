@@ -1,9 +1,8 @@
 /* eslint-disable no-underscore-dangle */
 const blogsRouter = require('express').Router();
-const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
+const userExtractor = require('../middleware/userExtractor');
 const Blog = require('../models/blog');
-const User = require('../models/user');
 
 blogsRouter.get('/', async (request, response) => {
   const blogs = await Blog.find({}).populate('user', {
@@ -23,17 +22,10 @@ blogsRouter.get('/:id', async (request, response) => {
   }
 });
 
-blogsRouter.post('/', async (request, response) => {
+blogsRouter.post('/', userExtractor, async (request, response) => {
   // eslint-disable-next-line object-curly-newline
   const { author, url, likes, title } = request.body;
-  const { token } = request;
-
-  const decodedToken = jwt.verify(token, process.env.SECRET);
-  if (!token || !decodedToken.id) {
-    return response.status(401).json({ error: 'Token is missing or invalid' });
-  }
-
-  const user = await User.findById(decodedToken.id);
+  const { user } = request;
 
   if (!url || !title) {
     return response.status(400).end();
@@ -55,7 +47,7 @@ blogsRouter.post('/', async (request, response) => {
   return response.status(201).json(savedBlog);
 });
 
-blogsRouter.delete('/:id', async (request, response) => {
+blogsRouter.delete('/:id', userExtractor, async (request, response) => {
   const isAValidId = mongoose.Types.ObjectId.isValid(request.params.id);
   if (!isAValidId) {
     return response.status(401).json({ error: 'Invalid ID' });
@@ -66,14 +58,8 @@ blogsRouter.delete('/:id', async (request, response) => {
     return response.status(404).json({ error: 'Blog does not exist' });
   }
 
-  const { token } = request;
-  const decodedToken = jwt.verify(token, process.env.SECRET);
-  if (!token || !decodedToken.id) {
-    return response.status(401).json({ error: 'Token is missing or invalid' });
-  }
-
-  const blogUser = await User.findById(decodedToken.id);
-  if (blogToDelete.user.toString() !== blogUser._id.toString()) {
+  const { user } = request;
+  if (blogToDelete.user.toString() !== user._id.toString()) {
     return response
       .status(401)
       .json({ error: 'You cannot delete blogs of other users' });
