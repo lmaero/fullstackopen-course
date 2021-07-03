@@ -48,8 +48,8 @@ test('a blog can be added', async () => {
   const blogsAtEnd = await helper.blogsInDb();
   expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length + 1);
 
-  const authors = blogsAtEnd.map((blog) => blog.title);
-  expect(authors).toContain('Amazing Page');
+  const titles = blogsAtEnd.map((blog) => blog.title);
+  expect(titles).toContain('Amazing Page');
 });
 
 test('if likes property is missing, default value will be 0', async () => {
@@ -72,6 +72,38 @@ test('if likes property is missing, default value will be 0', async () => {
     (blog) => blog.title === newBlog.title,
   );
   expect(recentlyAddedBlog.likes).toBe(0);
+});
+
+test('if the title property is missing, response has 400 status', async () => {
+  const newBlog = {
+    author: 'non-existing author',
+    url: 'https://missingtitle.com',
+    likes: 0,
+  };
+
+  await api.post('/api/blogs').send(newBlog).expect(400);
+
+  const blogsAtEnd = await helper.blogsInDb();
+  expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length);
+
+  const authors = blogsAtEnd.map((blog) => blog.author);
+  expect(authors).not.toContain('non-existing author');
+});
+
+test('if the url property is missing, response has 400 status', async () => {
+  const newBlog = {
+    author: 'non-existing author',
+    title: 'Missing URL blog',
+    likes: 0,
+  };
+
+  await api.post('/api/blogs').send(newBlog).expect(400);
+
+  const blogsAtEnd = await helper.blogsInDb();
+  expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length);
+
+  const authors = blogsAtEnd.map((blog) => blog.author);
+  expect(authors).not.toContain('non-existing author');
 });
 
 afterAll(() => {

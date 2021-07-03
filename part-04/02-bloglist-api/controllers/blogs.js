@@ -10,6 +10,10 @@ blogsRouter.post('/', async (request, response) => {
   // eslint-disable-next-line object-curly-newline
   const { author, url, likes, title } = request.body;
 
+  if (!url || !title) {
+    return response.status(400).end();
+  }
+
   const newBlog = new Blog({
     title,
     author,
@@ -18,7 +22,7 @@ blogsRouter.post('/', async (request, response) => {
   });
 
   const result = await newBlog.save();
-  response.status(201).json(result);
+  return response.status(201).json(result);
 });
 
 module.exports = blogsRouter;
