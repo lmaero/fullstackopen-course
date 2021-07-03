@@ -10,6 +10,12 @@ const userExtractor = async (request, response, next) => {
 
   request.user = await User.findById(decodedToken.id);
 
+  if (!request.user) {
+    return response
+      .status(401)
+      .json({ error: 'You must to be logged in to post a blog' });
+  }
+
   return next();
 };
 

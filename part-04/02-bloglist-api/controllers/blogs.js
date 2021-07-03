@@ -59,6 +59,13 @@ blogsRouter.delete('/:id', userExtractor, async (request, response) => {
   }
 
   const { user } = request;
+
+  if (!blogToDelete.user) {
+    return response
+      .status(400)
+      .json({ error: 'This blog was not created by any user' });
+  }
+
   if (blogToDelete.user.toString() !== user._id.toString()) {
     return response
       .status(401)

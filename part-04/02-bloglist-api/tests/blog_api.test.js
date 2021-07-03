@@ -2,13 +2,31 @@ const mongoose = require('mongoose');
 const supertest = require('supertest');
 const app = require('../app');
 const Blog = require('../models/blog');
+const User = require('../models/user');
 const helper = require('./test_helper');
 
 const api = supertest(app);
 
+let token = '';
+
 beforeEach(async () => {
   await Blog.deleteMany({});
   await Blog.insertMany(helper.initialBlogs);
+  await User.deleteMany({});
+
+  const userToCreate = {
+    name: 'Luis Guzman',
+    username: 'lmaero.pro',
+    password: 'easyToRemember',
+  };
+
+  const createdUser = await api.post('/api/users').send(userToCreate);
+  const loggedIn = await api.post('/api/login').send({
+    username: createdUser.body.username,
+    password: userToCreate.password,
+  });
+
+  token = `bearer ${loggedIn.body.token}`;
 });
 
 describe('when there is initial data saved to DB', () => {
@@ -51,7 +69,41 @@ describe('viewing a specific blog', () => {
 });
 
 describe('addition of new blogs', () => {
-  test('a blog can be added if has valid data', async () => {
+  test('fails if a token is not provided', async () => {
+    const newBlog = {
+      title: 'Without Token',
+      author: 'Luis Guzman',
+      url: 'https://lmaero.pro/',
+      likes: 5000,
+    };
+
+    await api.post('/api/blogs').send(newBlog).expect(401);
+
+    const blogsAtEnd = await helper.blogsInDb();
+    expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length);
+
+    const titles = blogsAtEnd.map((blog) => blog.title);
+    expect(titles).not.toContain('Without Token');
+  });
+
+  test('fails if user is not logged in', async () => {
+    const newBlog = {
+      title: 'User Not Logged In',
+      author: 'Luis Guzman',
+      url: 'https://lmaero.pro/',
+      likes: 5000,
+    };
+
+    await api.post('/api/blogs').send(newBlog).expect(401);
+
+    const blogsAtEnd = await helper.blogsInDb();
+    expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length);
+
+    const titles = blogsAtEnd.map((blog) => blog.title);
+    expect(titles).not.toContain('User Not Logged In');
+  });
+
+  test('a blog can be added if has valid data and it provides a valid token', async () => {
     const newBlog = {
       title: 'Amazing Page',
       author: 'Luis Guzman',
@@ -61,6 +113,7 @@ describe('addition of new blogs', () => {
 
     await api
       .post('/api/blogs')
+      .set('authorization', token)
       .send(newBlog)
       .expect(201)
       .expect('Content-Type', /application\/json/);
@@ -81,6 +134,7 @@ describe('addition of new blogs', () => {
 
     await api
       .post('/api/blogs')
+      .set('authorization', token)
       .send(newBlog)
       .expect(201)
       .expect('Content-Type', /application\/json/);
@@ -101,7 +155,11 @@ describe('addition of new blogs', () => {
       likes: 0,
     };
 
-    await api.post('/api/blogs').send(newBlog).expect(400);
+    await api
+      .post('/api/blogs')
+      .set('authorization', token)
+      .send(newBlog)
+      .expect(400);
 
     const blogsAtEnd = await helper.blogsInDb();
     expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length);
@@ -117,7 +175,11 @@ describe('addition of new blogs', () => {
       likes: 0,
     };
 
-    await api.post('/api/blogs').send(newBlog).expect(400);
+    await api
+      .post('/api/blogs')
+      .set('authorization', token)
+      .send(newBlog)
+      .expect(400);
 
     const blogsAtEnd = await helper.blogsInDb();
     expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length);
@@ -128,14 +190,32 @@ describe('addition of new blogs', () => {
 });
 
 describe('deletion of a blog', () => {
-  test('succeeds with status code 204 if id is valid', async () => {
-    const blogsAtStart = await helper.blogsInDb();
-    const blogToDelete = blogsAtStart[0];
+  let blogToDelete = '';
 
-    await api.delete(`/api/blogs/${blogToDelete.id}`).expect(204);
+  beforeEach(async () => {
+    const blog = {
+      title: 'One more to test middleware for token access',
+      author: 'Luis Guzman',
+      url: 'https://lmaero.pro/',
+      likes: 1000,
+    };
+
+    const createdBlog = await api
+      .post('/api/blogs')
+      .set('authorization', token)
+      .send(blog);
+
+    blogToDelete = createdBlog.body;
+  });
+
+  test('succeeds with status code 204 if id is valid', async () => {
+    await api
+      .delete(`/api/blogs/${blogToDelete.id}`)
+      .set('authorization', token)
+      .expect(204);
 
     const blogsAtEnd = await helper.blogsInDb();
-    expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length - 1);
+    expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length);
 
     const contents = blogsAtEnd.map((blog) => blog.author);
     expect(contents).not.toContain(blogToDelete.author);
