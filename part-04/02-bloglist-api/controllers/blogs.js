@@ -1,6 +1,7 @@
 /* eslint-disable no-underscore-dangle */
 const blogsRouter = require('express').Router();
 const jwt = require('jsonwebtoken');
+const mongoose = require('mongoose');
 const Blog = require('../models/blog');
 const User = require('../models/user');
 
@@ -55,14 +56,31 @@ blogsRouter.post('/', async (request, response) => {
 });
 
 blogsRouter.delete('/:id', async (request, response) => {
-  const noteToDelete = request.params.id;
-
-  if (noteToDelete) {
-    await Blog.findByIdAndDelete(noteToDelete);
-    return response.status(204).end();
+  const isAValidId = mongoose.Types.ObjectId.isValid(request.params.id);
+  if (!isAValidId) {
+    return response.status(401).json({ error: 'Invalid ID' });
   }
 
-  return response.status(404).end();
+  const blogToDelete = await Blog.findById(request.params.id);
+  if (!blogToDelete) {
+    return response.status(404).json({ error: 'Blog does not exist' });
+  }
+
+  const { token } = request;
+  const decodedToken = jwt.verify(token, process.env.SECRET);
+  if (!token || !decodedToken.id) {
+    return response.status(401).json({ error: 'Token is missing or invalid' });
+  }
+
+  const blogUser = await User.findById(decodedToken.id);
+  if (blogToDelete.user.toString() !== blogUser._id.toString()) {
+    return response
+      .status(401)
+      .json({ error: 'You cannot delete blogs of other users' });
+  }
+
+  await Blog.findByIdAndDelete(request.params.id);
+  return response.status(204).end();
 });
 
 blogsRouter.put('/:id', async (request, response) => {
