@@ -72,7 +72,13 @@ blogsRouter.delete('/:id', userExtractor, async (request, response) => {
       .json({ error: 'You cannot delete blogs of other users' });
   }
 
-  await Blog.findByIdAndDelete(request.params.id);
+  await blogToDelete.remove();
+
+  user.blogs = user.blogs.filter(
+    (blog) => blog._id.toString() !== blogToDelete._id.toString(),
+  );
+  await user.save();
+
   return response.status(204).end();
 });
 
