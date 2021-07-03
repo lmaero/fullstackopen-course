@@ -7,8 +7,17 @@ blogsRouter.get('/', async (request, response) => {
 });
 
 blogsRouter.post('/', async (request, response) => {
-  const blog = new Blog(request.body);
-  const result = await blog.save();
+  // eslint-disable-next-line object-curly-newline
+  const { author, url, likes, title } = request.body;
+
+  const newBlog = new Blog({
+    title,
+    author,
+    url,
+    likes: likes || 0,
+  });
+
+  const result = await newBlog.save();
   response.status(201).json(result);
 });
 

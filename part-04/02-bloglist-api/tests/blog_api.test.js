@@ -52,6 +52,28 @@ test('a blog can be added', async () => {
   expect(authors).toContain('Amazing Page');
 });
 
+test('if likes property is missing, default value will be 0', async () => {
+  const newBlog = {
+    title: 'A page with 0 likes',
+    author: 'Non-liked author',
+    url: 'https://author.sad/',
+  };
+
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(201)
+    .expect('Content-Type', /application\/json/);
+
+  const blogsAtEnd = await helper.blogsInDb();
+  expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length + 1);
+
+  const recentlyAddedBlog = blogsAtEnd.find(
+    (blog) => blog.title === newBlog.title,
+  );
+  expect(recentlyAddedBlog.likes).toBe(0);
+});
+
 afterAll(() => {
   mongoose.connection.close();
 });
