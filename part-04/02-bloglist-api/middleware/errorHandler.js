@@ -1,7 +1,7 @@
 const logger = require('./logger');
 
 function errorHandler(error, request, response, next) {
-  logger.error(error.name);
+  logger.error(`Error name: ${error.name}`);
 
   if (error.name === 'ValidationError') {
     return response.status(400).json({ error: error.message });
@@ -9,6 +9,14 @@ function errorHandler(error, request, response, next) {
 
   if (error.name === 'MongoError') {
     return response.status(400).json({ error: error.message });
+  }
+
+  if (error.name === 'JsonWebTokenError') {
+    return response.status(401).json({ error: error.message });
+  }
+
+  if (error.name === 'TokenExpiredError') {
+    return response.status(401).json({ error: error.message });
   }
 
   return next(error);
