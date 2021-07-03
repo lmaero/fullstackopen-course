@@ -7,6 +7,7 @@ const logger = require('./middleware/logger');
 const requestLogger = require('./middleware/requestLogger');
 const unknownEndpoint = require('./middleware/unknownEndpoint');
 const errorHandler = require('./middleware/errorHandler');
+const tokenExtractor = require('./middleware/tokenExtractor');
 
 const app = express();
 
@@ -31,6 +32,7 @@ mongoose
 app.use(cors());
 app.use(express.json());
 app.use(requestLogger());
+app.use(tokenExtractor);
 
 app.use('/api/blogs', blogsRouter);
 app.use('/api/users', usersRouter);
