@@ -16,6 +16,11 @@ const LoginForm = ({
       const loggedUser = await loginService.login({ username, password });
       showNotification(`Logged in as ${username}`);
       setUser(loggedUser);
+
+      window
+        .localStorage
+        .setItem('blogAppLoggedUser', JSON.stringify(loggedUser));
+
       setUsername('');
       setPassword('');
     } catch (error) {

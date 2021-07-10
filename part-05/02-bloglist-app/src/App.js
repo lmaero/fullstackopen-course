@@ -23,11 +23,26 @@ const App = () => {
       .then((initialBlogs) => setBlogs(initialBlogs));
   }, []);
 
+  useEffect(() => {
+    const loggedUserJSON = window.localStorage.getItem('blogAppLoggedUser');
+
+    if (loggedUserJSON) {
+      const loggedUser = JSON.parse(loggedUserJSON);
+      setUser(loggedUser);
+    }
+  }, []);
+
   function showNotification(message, type = 'success') {
     setNotification({ message, type });
     setTimeout(() => {
       setNotification({});
     }, 5000);
+  }
+
+  function handleLogout() {
+    window.localStorage.removeItem('blogAppLoggedUser');
+    setUser(null);
+    showNotification('Logged out');
   }
 
   return (
@@ -52,6 +67,7 @@ const App = () => {
         : (
           <div>
             <p>{ `${user.username} logged in` }</p>
+            <button type="button" onClick={handleLogout}>Log out</button>
             <BlogsList blogs={blogs} />
           </div>
         ) }
