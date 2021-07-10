@@ -18,6 +18,9 @@ const AddBlogForm = ({ blogs, setBlogs, showNotification }) => {
 
       const createdBlog = await blogService.create(newBlog);
       setBlogs(blogs.concat(createdBlog));
+      showNotification(
+        `A new blog ${newBlog.title} by ${newBlog.author} was added`,
+      );
       setBlogTitle('');
       setBlogAuthor('');
       setBlogURL('');
