@@ -1,4 +1,5 @@
 import React from 'react';
+import blogService from '../services/blogs';
 import loginService from '../services/login';
 
 const LoginForm = ({
@@ -15,12 +16,13 @@ const LoginForm = ({
     try {
       const loggedUser = await loginService.login({ username, password });
       showNotification(`Logged in as ${username}`);
-      setUser(loggedUser);
 
       window
         .localStorage
         .setItem('blogAppLoggedUser', JSON.stringify(loggedUser));
 
+      blogService.setToken(loggedUser.token);
+      setUser(loggedUser);
       setUsername('');
       setPassword('');
     } catch (error) {

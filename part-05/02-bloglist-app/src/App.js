@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import AddBlogForm from './components/AddBlogForm';
 import BlogsList from './components/BlogsList';
 import LoginForm from './components/LoginForm';
 import Notification from './components/Notification';
@@ -24,11 +25,14 @@ const App = () => {
   }, []);
 
   useEffect(() => {
-    const loggedUserJSON = window.localStorage.getItem('blogAppLoggedUser');
+    const loggedUserJSON = window
+      .localStorage
+      .getItem('blogAppLoggedUser');
 
     if (loggedUserJSON) {
       const loggedUser = JSON.parse(loggedUserJSON);
       setUser(loggedUser);
+      blogService.setToken(loggedUser.token);
     }
   }, []);
 
@@ -68,6 +72,13 @@ const App = () => {
           <div>
             <p>{ `${user.username} logged in` }</p>
             <button type="button" onClick={handleLogout}>Log out</button>
+
+            <AddBlogForm
+              blogs={blogs}
+              setBlogs={setBlogs}
+              showNotification={showNotification}
+            />
+
             <BlogsList blogs={blogs} />
           </div>
         ) }

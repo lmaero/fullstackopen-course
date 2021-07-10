@@ -4,9 +4,21 @@
 const mongoose = require('mongoose');
 
 const blogSchema = new mongoose.Schema({
-  title: String,
-  author: String,
-  url: String,
+  title: {
+    type: String,
+    required: true,
+    minlength: 8,
+  },
+  author: {
+    type: String,
+    required: true,
+    minlength: 5,
+  },
+  url: {
+    type: String,
+    required: true,
+    minlength: 10,
+  },
   likes: Number,
   user: {
     type: mongoose.Schema.Types.ObjectId,
