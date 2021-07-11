@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import blogService from '../services/blogs';
 import Togglable from './Togglable';
@@ -82,6 +83,14 @@ const Blog = ({
       </>
     </React.StrictMode>
   );
+};
+
+Blog.propTypes = {
+  blog: PropTypes.object.isRequired,
+  blogs: PropTypes.array.isRequired,
+  setBlogs: PropTypes.func.isRequired,
+  loggedUser: PropTypes.object.isRequired,
+  showNotification: PropTypes.func.isRequired,
 };
 
 export default Blog;

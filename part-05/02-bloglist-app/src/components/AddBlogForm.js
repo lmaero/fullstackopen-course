@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 
 const AddBlogForm = ({ showNotification, addBlog }) => {
@@ -67,6 +68,11 @@ const AddBlogForm = ({ showNotification, addBlog }) => {
       </>
     </React.StrictMode>
   );
+};
+
+AddBlogForm.propTypes = {
+  showNotification: PropTypes.func.isRequired,
+  addBlog: PropTypes.func.isRequired,
 };
 
 export default AddBlogForm;

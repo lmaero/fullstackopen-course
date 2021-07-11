@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React, { useImperativeHandle, useState } from 'react';
 
 const Togglable = React.forwardRef((props, ref) => {
@@ -37,5 +38,10 @@ const Togglable = React.forwardRef((props, ref) => {
     </React.StrictMode>
   );
 });
+
+Togglable.propTypes = {
+  hideButtonLabel:PropTypes.string.isRequired,
+  showButtonLabel:PropTypes.string.isRequired,
+}
 
 export default Togglable;

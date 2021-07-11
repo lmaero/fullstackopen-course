@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 import blogService from '../services/blogs';
 import loginService from '../services/login';
@@ -58,6 +59,11 @@ const LoginForm = ({ setUser, showNotification }) => {
       </>
     </React.StrictMode>
   );
+};
+
+LoginForm.propTypes = {
+  setUser: PropTypes.func.isRequired,
+  showNotification: PropTypes.func.isRequired,
 };
 
 export default LoginForm;
