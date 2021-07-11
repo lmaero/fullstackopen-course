@@ -33,6 +33,7 @@ const LoginForm = ({ setUser, showNotification }) => {
         <h2>LoginForm</h2>
         <form onSubmit={handleLogin}>
           <input
+            id="username"
             name="username"
             onChange={(event) => setUsername(event.target.value)}
             placeholder="Username..."
@@ -44,6 +45,7 @@ const LoginForm = ({ setUser, showNotification }) => {
           <br />
 
           <input
+            id="password"
             name="password"
             onChange={(event) => setPassword(event.target.value)}
             placeholder="Password..."
@@ -54,7 +56,7 @@ const LoginForm = ({ setUser, showNotification }) => {
 
           <br />
 
-          <button type="submit">Login</button>
+          <button id="login-button" type="submit">Login</button>
         </form>
       </>
     </React.StrictMode>
