@@ -2,7 +2,9 @@ import React from 'react';
 import blogService from '../services/blogs';
 import Togglable from './Togglable';
 
-const Blog = ({ blog, blogs, setBlogs }) => {
+const Blog = ({
+  blog, blogs, setBlogs, loggedUser, showNotification,
+}) => {
   const {
     id, author, title, url, likes, user,
   } = blog;
@@ -29,6 +31,35 @@ const Blog = ({ blog, blogs, setBlogs }) => {
     setBlogs(updatedBlogList);
   }
 
+  async function deleteBlog() {
+    // eslint-disable-next-line no-alert
+    const isDeletionConfirmed = window
+      .confirm(`Remove blog "${title}" by "${author}"?`);
+
+    if (isDeletionConfirmed) {
+      try {
+        await blogService.deleteBlog(id);
+
+        const afterDeleteList = blogs.filter((b) => (b.id !== id));
+        setBlogs(afterDeleteList);
+        showNotification(`${title} removed from list`);
+      } catch (error) {
+        showNotification(error.response.data.error, 'error');
+      }
+    } else {
+      showNotification('Action canceled by user', 'error');
+    }
+  }
+
+  function showDeleteButton() {
+    const blogUserName = user ? user.name : null;
+
+    if (loggedUser.name === blogUserName) {
+      return <button type="button" onClick={deleteBlog}>Delete</button>;
+    }
+    return null;
+  }
+
   return (
     <React.StrictMode>
       <>
@@ -44,7 +75,8 @@ const Blog = ({ blog, blogs, setBlogs }) => {
               { `Likes: ${likes}` }
               <button type="button" onClick={incrementLikes}>Like</button>
             </p>
-            { user ? <p>{ `User: ${user.name}` }</p> : ''}
+            { user ? <p>{ `User: ${user.name}` }</p> : '' }
+            {showDeleteButton()}
           </Togglable>
         </div>
       </>

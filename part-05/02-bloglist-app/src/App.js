@@ -8,7 +8,7 @@ import blogService from './services/blogs';
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
-  const [user, setUser] = useState(null);
+  const [loggedUser, setLoggedUser] = useState(null);
   const addBlogFormRef = useRef();
   const [notification, setNotification] = useState(
     {
@@ -29,9 +29,9 @@ const App = () => {
       .getItem('blogAppLoggedUser');
 
     if (loggedUserJSON) {
-      const loggedUser = JSON.parse(loggedUserJSON);
-      setUser(loggedUser);
-      blogService.setToken(loggedUser.token);
+      const parsedLoggedUser = JSON.parse(loggedUserJSON);
+      setLoggedUser(parsedLoggedUser);
+      blogService.setToken(parsedLoggedUser.token);
     }
   }, []);
 
@@ -44,14 +44,22 @@ const App = () => {
 
   function handleLogout() {
     window.localStorage.removeItem('blogAppLoggedUser');
-    setUser(null);
+    setLoggedUser(null);
     showNotification('Logged out');
   }
 
   async function addBlog(newBlog) {
     addBlogFormRef.current.toggleVisibility();
-    const createdBlog = await blogService.create(newBlog);
-    setBlogs(blogs.concat(createdBlog));
+    try {
+      const createdBlog = await blogService.create(newBlog);
+      showNotification(
+        `A new blog ${createdBlog.title} by ${createdBlog.author} was added`,
+      );
+
+      setBlogs(blogs.concat({ ...createdBlog, user: { name: loggedUser.name } }));
+    } catch (error) {
+      showNotification(error.response.data.error, 'error');
+    }
   }
 
   return (
@@ -62,16 +70,16 @@ const App = () => {
         ? <Notification notification={notification} />
         : null }
 
-      { user === null
+      { loggedUser === null
         ? (
           <LoginForm
-            setUser={setUser}
+            setUser={setLoggedUser}
             showNotification={showNotification}
           />
         )
         : (
           <div>
-            <p>{ `${user.username} logged in` }</p>
+            <p>{ `${loggedUser.username} logged in` }</p>
             <button type="button" onClick={handleLogout}>Log out</button>
 
             <Togglable
@@ -90,6 +98,9 @@ const App = () => {
             <BlogsList
               blogs={blogs}
               setBlogs={setBlogs}
+              loggedUser={loggedUser}
+              showNotification={showNotification}
+
             />
           </div>
         ) }

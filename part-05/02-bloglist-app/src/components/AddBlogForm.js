@@ -16,9 +16,6 @@ const AddBlogForm = ({ showNotification, addBlog }) => {
       };
 
       addBlog(newBlog);
-      showNotification(
-        `A new blog ${newBlog.title} by ${newBlog.author} was added`,
-      );
       setBlogTitle('');
       setBlogAuthor('');
       setBlogURL('');

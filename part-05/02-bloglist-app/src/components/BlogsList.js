@@ -1,7 +1,9 @@
 import React from 'react';
 import Blog from './Blog';
 
-const BlogsList = ({ blogs, setBlogs }) => (
+const BlogsList = ({
+  blogs, setBlogs, loggedUser, showNotification,
+}) => (
   <React.StrictMode>
     <>
       <h2>Blogs</h2>
@@ -13,6 +15,8 @@ const BlogsList = ({ blogs, setBlogs }) => (
             blog={blog}
             blogs={blogs}
             setBlogs={setBlogs}
+            loggedUser={loggedUser}
+            showNotification={showNotification}
           />
         ))}
     </>
