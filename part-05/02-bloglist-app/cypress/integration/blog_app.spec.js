@@ -159,4 +159,60 @@ describe('Blog app', function() {
       });
     });
   });
+
+  describe('When there are several blogs', function() {
+    beforeEach(function() {
+      cy.login({ username: 'lmaero.pro', password: 'topSecret' });
+      cy.visit('http://localhost:3000');
+
+      cy.createBlog({
+        author: 'Luis Guzman',
+        title: 'I will always be third',
+        url: 'https://lmaero.pro',
+        likes: 120
+      });
+
+      cy.createBlog({
+        author: 'Luis Guzman',
+        title: 'I will be second after two likes on the second blog',
+        url: 'https://lmaero.pro',
+        likes: 150
+      });
+
+      cy.createBlog({
+        author: 'Luis Guzman',
+        title: 'I will be first after two likes on me',
+        url: 'https://lmaero.pro',
+        likes: 149
+      });
+
+      cy.visit('http://localhost:3000');
+
+    });
+
+    it.only('Blogs appear ordered by number of likes', function () {
+      cy.get('#log-out-button').should('be.visible');
+
+      cy.get('.blog').then(blogs => {
+        const firstBlog = blogs[ 0 ];
+        const secondBlog = blogs[1];
+        const thirdBlog = blogs[2];
+
+        cy.get(firstBlog).contains('View details').click();
+        cy.get(firstBlog).contains('Likes: 150');
+
+        cy.get(secondBlog).contains('View details').click();
+        cy.get(secondBlog).contains('Likes: 149');
+
+        cy.get(thirdBlog).contains('View details').click();
+        cy.get(thirdBlog).contains('Likes: 120');
+
+        cy.get(secondBlog).contains('Like').click();
+        cy.get(secondBlog).contains('Like').click();
+
+        cy.get(secondBlog).contains('Likes: 151');
+        cy.get(firstBlog).contains('Likes: 150');
+      });
+    });
+  });
 });
