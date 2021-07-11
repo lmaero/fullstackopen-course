@@ -16,7 +16,7 @@ const Togglable = React.forwardRef((props, ref) => {
   return (
     <React.StrictMode>
       <>
-        <div style={hideWhenVisible}>
+        <div style={hideWhenVisible} className='shownByDefault'>
           <button
             type="button"
             onClick={toggleVisibility}
@@ -25,7 +25,7 @@ const Togglable = React.forwardRef((props, ref) => {
           </button>
         </div>
 
-        <div style={showWhenVisible}>
+        <div style={showWhenVisible} className='hiddenByDefault'>
           { props.children }
           <button
             type="button"

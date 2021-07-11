@@ -64,15 +64,15 @@ const Blog = ({
   return (
     <React.StrictMode>
       <>
-        <div style={blogStyle}>
+        <div style={blogStyle} className='blog'>
           { `${title} ${author}` }
 
           <Togglable
             showButtonLabel="View details"
             hideButtonLabel="Hide details"
           >
-            <p>{`URL: ${url}`}</p>
-            <p>
+            <p className='url'>{`URL: ${url}`}</p>
+            <p className='likes'>
               { `Likes: ${likes}` }
               <button type="button" onClick={incrementLikes}>Like</button>
             </p>
