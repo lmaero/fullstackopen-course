@@ -32,6 +32,7 @@ const AddBlogForm = ({ showNotification, addBlog }) => {
         <form onSubmit={handleSubmit}>
           {'Title: '}
           <input
+            id="BlogTitle"
             name="BlogTitle"
             onChange={(event) => setBlogTitle(event.target.value)}
             required
@@ -43,6 +44,7 @@ const AddBlogForm = ({ showNotification, addBlog }) => {
 
           {'Author: '}
           <input
+            id="BlogAuthor"
             name="BlogAuthor"
             onChange={(event) => setBlogAuthor(event.target.value)}
             required
@@ -54,6 +56,7 @@ const AddBlogForm = ({ showNotification, addBlog }) => {
 
           {'URL: '}
           <input
+            id="BlogURL"
             name="BlogURL"
             onChange={(event) => setBlogURL(event.target.value)}
             required
