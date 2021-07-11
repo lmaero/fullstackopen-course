@@ -5,6 +5,7 @@ import Blog from './Blog';
 
 describe('when a blog is rendered', () => {
   let component;
+  const incrementLikes = jest.fn();
 
   beforeEach(() => {
     const blog = {
@@ -21,6 +22,7 @@ describe('when a blog is rendered', () => {
         showNotification={ function () { } }
         setBlogs={ function () { } }
         loggedUser={ { name: 'Luis Guzman' } }
+        incrementLikes={incrementLikes}
       />
     );
   });
@@ -53,5 +55,14 @@ describe('when a blog is rendered', () => {
 
     const likes = component.getByText('Likes: 10000');
     expect(likes).toBeDefined();
+  });
+
+
+  test('when the likes button is pressed, event handler is called twice', () => {
+    const likesButton = component.getByText('Like');
+    fireEvent.click(likesButton);
+    fireEvent.click(likesButton);
+
+    expect(incrementLikes.mock.calls).toHaveLength(2);
   });
 });

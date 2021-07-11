@@ -4,7 +4,7 @@ import blogService from '../services/blogs';
 import Togglable from './Togglable';
 
 const Blog = ({
-  blog, blogs, setBlogs, loggedUser, showNotification,
+  blog, blogs, setBlogs, loggedUser, showNotification, incrementLikes
 }) => {
   const {
     id, author, title, url, likes, user,
@@ -17,20 +17,6 @@ const Blog = ({
     maxWidth: '400px',
     padding: '1rem',
   };
-
-  async function incrementLikes() {
-    const updatedBlog = {
-      ...blog,
-      user: user ? user.id : null,
-    };
-
-    const returnedBlog = await blogService.update(id, updatedBlog);
-    const updatedBlogList = blogs.map((b) => (b.id === returnedBlog.id
-      ? { ...blog, likes: likes + 1 }
-      : b));
-
-    setBlogs(updatedBlogList);
-  }
 
   async function deleteBlog() {
     // eslint-disable-next-line no-alert
@@ -74,7 +60,13 @@ const Blog = ({
             <p className='url'>{`URL: ${url}`}</p>
             <p className='likes'>
               { `Likes: ${likes}` }
-              <button type="button" onClick={incrementLikes}>Like</button>
+              <button
+                type="button"
+                className='likesButton'
+                onClick={ () => incrementLikes(id) }
+              >
+                Like
+              </button>
             </p>
             { user ? <p>{ `User: ${user.name}` }</p> : '' }
             {showDeleteButton()}
