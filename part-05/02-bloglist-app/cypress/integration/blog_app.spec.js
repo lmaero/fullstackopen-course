@@ -47,4 +47,27 @@ describe('Blog app', function() {
       cy.get('html').should('not.contain','lmaero.pro logged in');
     });
   });
+
+  describe('When logged in', function() {
+    beforeEach(function() {
+      cy.login({ username: 'lmaero.pro', password: 'topSecret' });
+    });
+
+    it('A blog can be created', function () {
+      cy.get('#log-out-button').should('be.visible');
+
+      cy.contains('Create new Blog').click();
+
+      cy.get('#BlogTitle').should('be.visible');
+      cy.get('#BlogAuthor').should('be.visible');
+      cy.get('#BlogURL').should('be.visible');
+
+      cy.get('#BlogTitle').type('A blog created using cypress');
+      cy.get('#BlogAuthor').type('Luis Guzman');
+      cy.get('#BlogURL').type('https://lmaero.pro');
+
+      cy.get('#create-blog-button').click();
+      cy.contains('A blog created using cypress');
+    });
+  });
 });

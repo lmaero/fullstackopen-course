@@ -97,7 +97,13 @@ const App = () => {
         : (
           <div>
             <p>{ `${loggedUser.username} logged in` }</p>
-            <button type="button" onClick={handleLogout}>Log out</button>
+            <button
+              id="log-out-button"
+              type="button"
+              onClick={ handleLogout }
+            >
+              Log out
+            </button>
 
             <Togglable
               showButtonLabel="Create new Blog"
