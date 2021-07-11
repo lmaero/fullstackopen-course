@@ -38,6 +38,6 @@ const blogService = {
   update,
   deleteBlog,
   setToken,
-}
+};
 
-export default blogService
+export default blogService;
