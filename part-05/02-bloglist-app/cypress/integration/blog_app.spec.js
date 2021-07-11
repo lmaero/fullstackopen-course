@@ -51,6 +51,22 @@ describe('Blog app', function() {
   describe('When logged in', function() {
     beforeEach(function() {
       cy.login({ username: 'lmaero.pro', password: 'topSecret' });
+      cy.createBlog({
+        author: 'Luis Guzman',
+        title: 'New Blog 1',
+        url: 'https://lmaero.pro' });
+      cy.createBlog({
+        author: 'Luis Guzman',
+        title: 'New Blog 2',
+        url: 'https://lmaero.pro' });
+      cy.createBlog({
+        author: 'Luis Guzman',
+        title: 'New Blog 3',
+        url: 'https://lmaero.pro'
+      });
+
+      cy.visit('http://localhost:3000');
+
     });
 
     it('A blog can be created', function () {
@@ -68,6 +84,18 @@ describe('Blog app', function() {
 
       cy.get('#create-blog-button').click();
       cy.contains('A blog created using cypress');
+    });
+
+    it('A blog can be liked', function () {
+      cy.get('#log-out-button').should('be.visible');
+
+      cy.contains('View details').click();
+      cy.contains('Hide details').click();
+      cy.contains('View details').click();
+
+      cy.contains('Likes: 0');
+      cy.get('#likes-button').click();
+      cy.contains('Likes: 1');
     });
   });
 });

@@ -61,6 +61,7 @@ const Blog = ({
             <p className='likes'>
               { `Likes: ${likes}` }
               <button
+                id="likes-button"
                 type="button"
                 className='likesButton'
                 onClick={ () => incrementLikes(id) }
