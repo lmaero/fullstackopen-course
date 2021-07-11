@@ -1,12 +1,22 @@
 describe('Blog app', function() {
   beforeEach(function() {
     cy.request('POST', 'http://localhost:3003/api/testing/reset');
+
     const user = {
       name: 'Luis Guzman',
       username: 'lmaero.pro',
       password: 'topSecret'
     };
+
+    const anotherUser = {
+      name: 'Super Admin',
+      username: 'root',
+      password: 't0pS3kr3t'
+    };
+
     cy.request('POST', 'http://localhost:3003/api/users/', user);
+    cy.request('POST', 'http://localhost:3003/api/users/', anotherUser);
+
     cy.visit('http://localhost:3000');
   });
 
@@ -96,6 +106,57 @@ describe('Blog app', function() {
       cy.contains('Likes: 0');
       cy.get('#likes-button').click();
       cy.contains('Likes: 1');
+    });
+  });
+
+  describe('When two users exists and one of them is logged in', function() {
+    beforeEach(function() {
+      cy.login({ username: 'lmaero.pro', password: 'topSecret' });
+      cy.createBlog({
+        author: 'Luis Guzman',
+        title: 'A blog created by lmaero.pro',
+        url: 'https://lmaero.pro'
+      });
+
+      cy.login({ username: 'root', password: 't0pS3kr3t' });
+      cy.createBlog({
+        author: 'Super Admin',
+        title: 'A blog created by root',
+        url: 'https://lmaero.pro'
+      });
+
+      cy.visit('http://localhost:3000');
+
+    });
+
+    it('A blog cannot be deleted if its not authored by logged in user', function () {
+      cy.get('#log-out-button').should('be.visible');
+
+      cy.contains('View details').click();
+
+      cy.get('.blog').then(blogs => {
+        const blogCreatedByAnotherUser = blogs[0];
+        cy.get(blogCreatedByAnotherUser).should('not.contain', 'Delete');
+      });
+    });
+
+    it('A blog can be deleted if its authored by logged in user', function () {
+      cy.get('#log-out-button').click();
+      cy.login({ username: 'lmaero.pro', password: 'topSecret' });
+
+      cy.contains('View details').click();
+
+      cy.get('.blog').then(blogs => {
+        const blogCreatedBySameUser = blogs[0];
+        cy.get(blogCreatedBySameUser).should('contain', 'Delete');
+
+        cy.contains('Delete').click();
+
+        cy.get('.notification--success')
+          .should('contain', 'A blog created by lmaero.pro removed from list')
+          .and('have.css', 'color', 'rgb(0, 128, 0)')
+          .and('have.css', 'border-style', 'solid');
+      });
     });
   });
 });
