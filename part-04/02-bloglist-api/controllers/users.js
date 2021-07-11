@@ -45,6 +45,7 @@ usersRouter.get('/', async (request, response) => {
       title: 1,
       url: 1,
       author: 1,
+      likes: 1,
     });
 
   return response

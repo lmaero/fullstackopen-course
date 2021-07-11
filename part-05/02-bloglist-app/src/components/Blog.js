@@ -1,9 +1,10 @@
 import React from 'react';
+import blogService from '../services/blogs';
 import Togglable from './Togglable';
 
-const Blog = ({ blog }) => {
+const Blog = ({ blog, blogs, setBlogs }) => {
   const {
-    author, title, url, likes, user,
+    id, author, title, url, likes, user,
   } = blog;
 
   const blogStyle = {
@@ -13,6 +14,20 @@ const Blog = ({ blog }) => {
     maxWidth: '400px',
     padding: '1rem',
   };
+
+  async function incrementLikes() {
+    const updatedBlog = {
+      ...blog,
+      user: user ? user.id : null,
+    };
+
+    const returnedBlog = await blogService.update(id, updatedBlog);
+    const updatedBlogList = blogs.map((b) => (b.id === returnedBlog.id
+      ? { ...blog, likes: likes + 1 }
+      : b));
+
+    setBlogs(updatedBlogList);
+  }
 
   return (
     <React.StrictMode>
@@ -27,7 +42,7 @@ const Blog = ({ blog }) => {
             <p>{`URL: ${url}`}</p>
             <p>
               { `Likes: ${likes}` }
-              <button type="button">Like</button>
+              <button type="button" onClick={incrementLikes}>Like</button>
             </p>
             { user ? <p>{ `User: ${user.name}` }</p> : ''}
           </Togglable>

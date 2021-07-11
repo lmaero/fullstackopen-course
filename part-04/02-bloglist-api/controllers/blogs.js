@@ -102,7 +102,7 @@ blogsRouter.delete('/:id', userExtractor, async (request, response) => {
     .end();
 });
 
-blogsRouter.put('/:id', async (request, response) => {
+blogsRouter.put('/:id', async (request, response, next) => {
   const { body } = request;
 
   const blog = {
@@ -110,13 +110,17 @@ blogsRouter.put('/:id', async (request, response) => {
     likes: body.likes + 1,
   };
 
-  const updatedBlog = await Blog.findByIdAndUpdate(request.params.id, blog, {
-    new: true,
-  });
+  try {
+    const updatedBlog = await Blog.findByIdAndUpdate(request.params.id, blog, {
+      new: true,
+    });
 
-  return response
-    .status(200)
-    .json(updatedBlog);
+    return response
+      .status(200)
+      .json(updatedBlog);
+  } catch (error) {
+    return next(error);
+  }
 });
 
 module.exports = blogsRouter;
