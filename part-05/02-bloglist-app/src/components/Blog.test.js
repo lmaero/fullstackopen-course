@@ -1,5 +1,5 @@
 import '@testing-library/jest-dom/extend-expect';
-import { render } from '@testing-library/react';
+import { fireEvent, render } from '@testing-library/react';
 import React from 'react';
 import Blog from './Blog';
 
@@ -39,5 +39,19 @@ describe('when a blog is rendered', () => {
   test('does not render likes and url by default', () => {
     const hiddenDiv = component.container.querySelector('.hiddenByDefault');
     expect(hiddenDiv).toHaveStyle('display: none');
+  });
+
+  test('when show details button is pressed, likes and url are shown', () => {
+    const button = component.getByText('View details');
+    fireEvent.click(button);
+
+    const shownDiv = component.container.querySelector('.hiddenByDefault');
+    expect(shownDiv).toHaveStyle('display: block');
+
+    const url = component.getByText('URL: https://lmaero.pro');
+    expect(url).toBeDefined();
+
+    const likes = component.getByText('Likes: 10000');
+    expect(likes).toBeDefined();
   });
 });
