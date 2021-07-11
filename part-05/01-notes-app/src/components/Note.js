@@ -7,7 +7,7 @@ const Note = ({ note, toggleImportance }) => {
     <React.StrictMode>
       <>
         <li className="note">
-          {note.content}
+          <span>{note.content}</span>
           <button type="button" onClick={toggleImportance}>{label}</button>
         </li>
       </>
