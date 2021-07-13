@@ -20,11 +20,6 @@ export const asObject = (anecdote) => {
 const initialState = anecdotesAtStart.map(asObject);
 
 const reducer = (state = initialState, action) => {
-  console.group('REDUCER');
-  console.log('state now: ', state);
-  console.log('action', action);
-  console.groupEnd();
-
   switch (action.type) {
     case 'VOTE':
       const votedId = action.data.id;
