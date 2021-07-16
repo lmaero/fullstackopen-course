@@ -33,7 +33,12 @@
     {
       "content": "Something more",
       "votes": 0,
-      "id": "x5q1M9j"
+      "id": "3hfrHzR"
+    },
+    {
+      "content": "With redux async",
+      "votes": 0,
+      "id": "KbrMAHH"
     }
   ]
 }
