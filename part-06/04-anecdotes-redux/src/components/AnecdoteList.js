@@ -10,7 +10,7 @@ const Anecdote = ({ anecdote }) => {
   const dispatch = useDispatch();
 
   function handleVote() {
-    dispatch(voteAnecdote(anecdote.id));
+    dispatch(voteAnecdote(anecdote));
     dispatch(setNotification(`You voted '${anecdote.content}'`));
     setTimeout(() => {
       dispatch(removeNotification());
@@ -40,8 +40,6 @@ const AnecdoteList = () => {
 
     return filteredList;
   });
-
-  console.log(anecdotes);
 
   return (
     <React.StrictMode>

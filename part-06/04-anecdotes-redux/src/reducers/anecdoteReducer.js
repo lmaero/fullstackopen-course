@@ -9,6 +9,7 @@ const reducer = (state = [], action) => {
         ...votedAnecdote,
         votes: votedAnecdote.votes + 1,
       };
+
       const newAnecdotesArray = state.map((a) =>
         a.id === votedId ? updatedAnecdote : a
       );
@@ -27,10 +28,16 @@ const reducer = (state = [], action) => {
   return state;
 };
 
-export const voteAnecdote = (id) => {
-  return {
-    type: 'VOTE',
-    data: { id },
+export const voteAnecdote = (anecdote) => {
+  return async (dispatch) => {
+    const updatedAnecdote = await anecdoteService.increaseVote(
+      anecdote.id,
+      anecdote
+    );
+    dispatch({
+      type: 'VOTE',
+      data: updatedAnecdote,
+    });
   };
 };
 
