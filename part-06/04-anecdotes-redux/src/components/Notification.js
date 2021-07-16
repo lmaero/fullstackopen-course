@@ -6,6 +6,10 @@ const Notification = () => {
     return notification;
   });
 
+  if (!notification) {
+    return null;
+  }
+
   const style = {
     border: 'solid',
     padding: 10,
