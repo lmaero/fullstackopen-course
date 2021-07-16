@@ -29,7 +29,17 @@ const Anecdote = ({ anecdote }) => {
 };
 
 const AnecdoteList = () => {
-  const anecdotes = useSelector((state) => state.anecdotes);
+  const anecdotes = useSelector(({ anecdotes, filter }) => {
+    if (!filter) {
+      return anecdotes;
+    }
+
+    const filteredList = anecdotes.filter((anecdote) =>
+      anecdote.content.toLowerCase().includes(filter.toLowerCase())
+    );
+
+    return filteredList;
+  });
 
   return (
     <React.StrictMode>
