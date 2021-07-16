@@ -41,6 +41,8 @@ const AnecdoteList = () => {
     return filteredList;
   });
 
+  console.log(anecdotes);
+
   return (
     <React.StrictMode>
       <React.Fragment>
