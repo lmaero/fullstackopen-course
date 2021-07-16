@@ -8,7 +8,7 @@ const Anecdote = ({ anecdote }) => {
 
   function handleVote() {
     dispatch(voteAnecdote(anecdote));
-    dispatch(setNotification(`You voted '${anecdote.content}'`, 10));
+    dispatch(setNotification(`You voted '${anecdote.content}'`, 5));
   }
 
   return (
