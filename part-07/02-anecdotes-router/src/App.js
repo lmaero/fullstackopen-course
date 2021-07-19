@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { BrowserRouter as Router, Link, Route, Switch } from 'react-router-dom';
+import { Link, Route, Switch, useRouteMatch } from 'react-router-dom';
 
 const Menu = () => {
   const padding = {
@@ -23,17 +23,36 @@ const Menu = () => {
   );
 };
 
-const AnecdoteList = ({ anecdotes }) => (
-  <div>
-    <h2>Anecdotes</h2>
+const Anecdote = ({ anecdote }) => {
+  const { content, author, info, votes } = anecdote;
+  return (
+    <div>
+      <h2>
+        {content} by {author}
+      </h2>
+      <p>has {votes} votes</p>
+      <p>
+        for more info see <a href={info}>{info}</a>
+      </p>
+    </div>
+  );
+};
 
-    <ul>
-      {anecdotes.map((anecdote) => (
-        <li key={anecdote.id}>{anecdote.content}</li>
-      ))}
-    </ul>
-  </div>
-);
+const AnecdoteList = ({ anecdotes }) => {
+  return (
+    <div>
+      <h2>Anecdotes</h2>
+
+      <ul>
+        {anecdotes.map((anecdote) => (
+          <li key={anecdote.id}>
+            <Link to={`/anecdotes/${anecdote.id}`}>{anecdote.content}</Link>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+};
 
 const About = () => (
   <div>
@@ -163,28 +182,36 @@ const App = () => {
     setAnecdotes(anecdotes.map((a) => (a.id === id ? voted : a)));
   };
 
+  const match = useRouteMatch('/anecdotes/:id');
+  const anecdote = match
+    ? anecdotes.find((a) => a.id === match.params.id)
+    : null;
+
   return (
     <div>
       <h1>Software anecdotes</h1>
-      <Router>
-        <Menu />
 
-        <Switch>
-          <Route path='/about'>
-            <About />
-          </Route>
+      <Menu />
 
-          <Route path='/create'>
-            <CreateNew addNew={addNew} />
-          </Route>
+      <Switch>
+        <Route path='/anecdotes/:id'>
+          <Anecdote anecdote={anecdote} />
+        </Route>
 
-          <Route path='/'>
-            <AnecdoteList anecdotes={anecdotes} />
-          </Route>
-        </Switch>
+        <Route path='/about'>
+          <About />
+        </Route>
 
-        <Footer />
-      </Router>
+        <Route path='/create'>
+          <CreateNew addNew={addNew} />
+        </Route>
+
+        <Route path='/'>
+          <AnecdoteList anecdotes={anecdotes} />
+        </Route>
+      </Switch>
+
+      <Footer />
     </div>
   );
 };
