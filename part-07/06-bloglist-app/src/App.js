@@ -9,18 +9,12 @@ import { setNotification } from './reducers/notificationReducer';
 import blogService from './services/blogs';
 
 const App = () => {
-  const [blogs, setBlogs] = useState([]);
-  const [loggedUser, setLoggedUser] = useState(null);
   const addBlogFormRef = useRef();
 
-  const notification = useSelector((state) => state.notification);
-  const dispatch = useDispatch();
+  const [loggedUser, setLoggedUser] = useState(null);
 
-  useEffect(() => {
-    blogService
-      .getAll()
-      .then((initialBlogs) => setBlogs(initialBlogs));
-  }, []);
+  const dispatch = useDispatch();
+  const notification = useSelector((state) => state.notification);
 
   useEffect(() => {
     const loggedUserJSON = window
@@ -44,26 +38,7 @@ const App = () => {
     }));
   }
 
-  async function addBlog(newBlog) {
-    addBlogFormRef.current.toggleVisibility();
-    try {
-      const createdBlog = await blogService.create(newBlog);
-
-      dispatch(setNotification({
-        message: `A new blog ${createdBlog.title} by ${createdBlog.author} was added`,
-        type: 'success',
-      }));
-
-      setBlogs(blogs.concat({ ...createdBlog, user: { name: loggedUser.name } }));
-    } catch (error) {
-      dispatch(setNotification({
-        message: error.response.data.error,
-        type: 'error',
-      }));
-    }
-  }
-
-  async function incrementLikes(id) {
+  /*   async function incrementLikes(id) {
     const blogToUpdate = blogs.find((blog) => blog.id === id);
     const { user, likes } = blogToUpdate;
 
@@ -78,7 +53,7 @@ const App = () => {
       : b));
 
     setBlogs(updatedBlogList);
-  }
+  } */
 
   return (
     <div>
@@ -111,17 +86,14 @@ const App = () => {
               ref={addBlogFormRef}
             >
               <AddBlogForm
-                blogs={blogs}
-                setBlogs={setBlogs}
-                addBlog={addBlog}
+                addBlogFormRef={addBlogFormRef}
+                loggedUser={loggedUser}
               />
             </Togglable>
 
             <BlogsList
-              blogs={blogs}
-              setBlogs={setBlogs}
               loggedUser={loggedUser}
-              incrementLikes={incrementLikes}
+              // incrementLikes={incrementLikes}
             />
           </div>
         ) }

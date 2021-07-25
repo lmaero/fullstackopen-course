@@ -1,28 +1,36 @@
 import PropTypes from 'prop-types';
-import React, { useState } from 'react';
+import React from 'react';
 import { useDispatch } from 'react-redux';
+import { createBlog } from '../reducers/blogsReducer';
 import { setNotification } from '../reducers/notificationReducer';
 
-const AddBlogForm = ({ addBlog }) => {
-  const [blogTitle, setBlogTitle] = useState('');
-  const [blogAuthor, setBlogAuthor] = useState('');
-  const [blogURL, setBlogURL] = useState('');
+const AddBlogForm = ({ addBlogFormRef, loggedUser }) => {
   const dispatch = useDispatch();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    addBlogFormRef.current.toggleVisibility();
+
+    const eventObject = event;
 
     try {
       const newBlog = {
-        title: blogTitle,
-        author: blogAuthor,
-        url: blogURL,
+        title: eventObject.target.BlogTitle.value,
+        author: eventObject.target.BlogAuthor.value,
+        url: eventObject.target.BlogURL.value,
+        user: loggedUser,
       };
 
-      addBlog(newBlog);
-      setBlogTitle('');
-      setBlogAuthor('');
-      setBlogURL('');
+      dispatch(createBlog(newBlog, loggedUser));
+
+      dispatch(setNotification({
+        message: `A new blog ${newBlog.title} by ${newBlog.author} was added`,
+        type: 'success',
+      }));
+
+      eventObject.target.BlogTitle.value = '';
+      eventObject.target.BlogAuthor.value = '';
+      eventObject.target.BlogURL.value = '';
     } catch (error) {
       dispatch(setNotification({
         message: error.response.data.error,
@@ -40,10 +48,8 @@ const AddBlogForm = ({ addBlog }) => {
           <input
             id="BlogTitle"
             name="BlogTitle"
-            onChange={(event) => setBlogTitle(event.target.value)}
             required
             type="text"
-            value={blogTitle}
           />
 
           <br />
@@ -52,10 +58,8 @@ const AddBlogForm = ({ addBlog }) => {
           <input
             id="BlogAuthor"
             name="BlogAuthor"
-            onChange={(event) => setBlogAuthor(event.target.value)}
             required
             type="text"
-            value={blogAuthor}
           />
 
           <br />
@@ -64,10 +68,8 @@ const AddBlogForm = ({ addBlog }) => {
           <input
             id="BlogURL"
             name="BlogURL"
-            onChange={(event) => setBlogURL(event.target.value)}
             required
             type="url"
-            value={blogURL}
           />
 
           <br />
@@ -85,7 +87,8 @@ const AddBlogForm = ({ addBlog }) => {
 };
 
 AddBlogForm.propTypes = {
-  addBlog: PropTypes.func.isRequired,
+  addBlogFormRef: PropTypes.func.isRequired,
+  loggedUser: PropTypes.shape({ name: PropTypes.string.isRequired }).isRequired,
 };
 
 export default AddBlogForm;

@@ -5,9 +5,7 @@ import { setNotification } from '../reducers/notificationReducer';
 import blogService from '../services/blogs';
 import Togglable from './Togglable';
 
-const Blog = ({
-  blog, blogs, setBlogs, loggedUser, incrementLikes,
-}) => {
+const Blog = ({ blog, loggedUser, incrementLikes }) => {
   const {
     id, author, title, url, likes, user,
   } = blog;
@@ -31,8 +29,8 @@ const Blog = ({
       try {
         await blogService.deleteBlog(id);
 
-        const afterDeleteList = blogs.filter((b) => (b.id !== id));
-        setBlogs(afterDeleteList);
+        // const afterDeleteList = blogs.filter((b) => (b.id !== id));
+        // setBlogs(afterDeleteList);
 
         dispatch(setNotification({
           message: `${title} removed from list`,
@@ -107,7 +105,6 @@ Blog.propTypes = {
     content: PropTypes.string.isRequired,
     filter: PropTypes.func.isRequired,
   }).isRequired,
-  setBlogs: PropTypes.func.isRequired,
   loggedUser: PropTypes.shape({
     username: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,

@@ -1,11 +1,16 @@
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { initializeBlogs } from '../reducers/blogsReducer';
 import Blog from './Blog';
 
-const BlogsList = ({
-  blogs, setBlogs, loggedUser, incrementLikes,
-}) => (
-  <React.StrictMode>
+const BlogsList = ({ loggedUser, incrementLikes }) => {
+  const dispatch = useDispatch();
+  const blogs = useSelector((state) => state.blogs);
+
+  useEffect(() => { dispatch(initializeBlogs()); }, [dispatch]);
+
+  return (
     <>
       <h2>Blogs</h2>
       { blogs
@@ -14,22 +19,19 @@ const BlogsList = ({
           <Blog
             key={blog.id}
             blog={blog}
-            blogs={blogs}
-            setBlogs={setBlogs}
             loggedUser={loggedUser}
             incrementLikes={incrementLikes}
           />
-        ))}
+        )) }
     </>
-  </React.StrictMode>
-);
+  );
+};
 
 BlogsList.propTypes = {
   blogs: PropTypes.shape({
     content: PropTypes.string.isRequired,
     sort: PropTypes.func.isRequired,
   }).isRequired,
-  setBlogs: PropTypes.func.isRequired,
   loggedUser: PropTypes.shape({ username: PropTypes.string.isRequired }).isRequired,
   incrementLikes: PropTypes.func.isRequired,
 };
