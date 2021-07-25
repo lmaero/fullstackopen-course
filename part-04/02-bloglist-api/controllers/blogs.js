@@ -103,17 +103,13 @@ blogsRouter.delete('/:id', userExtractor, async (request, response) => {
 });
 
 blogsRouter.put('/:id', async (request, response, next) => {
-  const { body } = request;
-
-  const blog = {
-    ...body,
-    likes: body.likes + 1,
-  };
+  const blogToUpdateId = request.params.id;
+  const newBlogObject = request.body;
 
   try {
-    const updatedBlog = await Blog.findByIdAndUpdate(request.params.id, blog, {
-      new: true,
-    });
+    const updatedBlog = await Blog
+      .findByIdAndUpdate(blogToUpdateId, newBlogObject, { new: true })
+      .populate('user', { username: 1, name: 1 });
 
     return response
       .status(200)

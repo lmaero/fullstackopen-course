@@ -1,13 +1,17 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { useDispatch } from 'react-redux';
+import { deleteBlog, likeBlog } from '../reducers/blogsReducer';
 import { setNotification } from '../reducers/notificationReducer';
-import blogService from '../services/blogs';
 import Togglable from './Togglable';
 
-const Blog = ({ blog, loggedUser, incrementLikes }) => {
+const Blog = ({ blog, loggedUser }) => {
   const {
-    id, author, title, url, likes, user,
+    author,
+    title,
+    url,
+    likes,
+    user,
   } = blog;
 
   const dispatch = useDispatch();
@@ -20,17 +24,14 @@ const Blog = ({ blog, loggedUser, incrementLikes }) => {
     padding: '1rem',
   };
 
-  async function deleteBlog() {
+  function deleteSelectedBlog() {
     // eslint-disable-next-line no-alert
     const isDeletionConfirmed = window
       .confirm(`Remove blog "${title}" by "${author}"?`);
 
     if (isDeletionConfirmed) {
       try {
-        await blogService.deleteBlog(id);
-
-        // const afterDeleteList = blogs.filter((b) => (b.id !== id));
-        // setBlogs(afterDeleteList);
+        dispatch(deleteBlog(blog));
 
         dispatch(setNotification({
           message: `${title} removed from list`,
@@ -54,7 +55,7 @@ const Blog = ({ blog, loggedUser, incrementLikes }) => {
     const blogUserName = user ? user.name : null;
 
     if (loggedUser.name === blogUserName) {
-      return <button type="button" onClick={deleteBlog}>Delete</button>;
+      return <button type="button" onClick={deleteSelectedBlog}>Delete</button>;
     }
     return null;
   }
@@ -76,7 +77,7 @@ const Blog = ({ blog, loggedUser, incrementLikes }) => {
                 id="likes-button"
                 type="button"
                 className="likesButton"
-                onClick={() => incrementLikes(id)}
+                onClick={() => dispatch(likeBlog(blog))}
               >
                 Like
               </button>
@@ -99,6 +100,7 @@ Blog.propTypes = {
     likes: PropTypes.number.isRequired,
     user: PropTypes.shape({
       name: PropTypes.string.isRequired,
+      id: PropTypes.string,
     }),
   }).isRequired,
   blogs: PropTypes.shape({
@@ -109,7 +111,6 @@ Blog.propTypes = {
     username: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
   }).isRequired,
-  incrementLikes: PropTypes.func.isRequired,
 };
 
 export default Blog;

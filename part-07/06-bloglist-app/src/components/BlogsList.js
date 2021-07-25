@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { initializeBlogs } from '../reducers/blogsReducer';
 import Blog from './Blog';
 
-const BlogsList = ({ loggedUser, incrementLikes }) => {
+const BlogsList = ({ loggedUser }) => {
   const dispatch = useDispatch();
   const blogs = useSelector((state) => state.blogs);
 
@@ -20,7 +20,6 @@ const BlogsList = ({ loggedUser, incrementLikes }) => {
             key={blog.id}
             blog={blog}
             loggedUser={loggedUser}
-            incrementLikes={incrementLikes}
           />
         )) }
     </>
@@ -33,7 +32,6 @@ BlogsList.propTypes = {
     sort: PropTypes.func.isRequired,
   }).isRequired,
   loggedUser: PropTypes.shape({ username: PropTypes.string.isRequired }).isRequired,
-  incrementLikes: PropTypes.func.isRequired,
 };
 
 export default BlogsList;

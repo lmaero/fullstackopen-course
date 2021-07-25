@@ -38,23 +38,6 @@ const App = () => {
     }));
   }
 
-  /*   async function incrementLikes(id) {
-    const blogToUpdate = blogs.find((blog) => blog.id === id);
-    const { user, likes } = blogToUpdate;
-
-    const updatedBlog = {
-      ...blogToUpdate,
-      user: user ? blogToUpdate.user.id : null,
-    };
-
-    const returnedBlog = await blogService.update(id, updatedBlog);
-    const updatedBlogList = blogs.map((b) => (b.id === returnedBlog.id
-      ? { ...blogToUpdate, likes: likes + 1 }
-      : b));
-
-    setBlogs(updatedBlogList);
-  } */
-
   return (
     <div>
       <h1>Blogs App</h1>
@@ -91,10 +74,7 @@ const App = () => {
               />
             </Togglable>
 
-            <BlogsList
-              loggedUser={loggedUser}
-              // incrementLikes={incrementLikes}
-            />
+            <BlogsList loggedUser={loggedUser} />
           </div>
         ) }
 
