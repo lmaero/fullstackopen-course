@@ -79,7 +79,21 @@ const Blog = () => {
           </button>
         </p>
         { user ? <p>{ `User: ${user.name}` }</p> : '' }
-        {showDeleteButton()}
+        { showDeleteButton() }
+
+        { blog.comments.length !== 0
+          ? (
+            <>
+              <h3>Comments</h3>
+              <ul>
+                {blog.comments
+                  .map((comment) => (
+                    <li key={comment}>{ comment }</li>
+                  )) }
+              </ul>
+            </>
+          )
+          : null }
       </>
     </React.StrictMode>
   );

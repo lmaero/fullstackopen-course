@@ -119,4 +119,52 @@ blogsRouter.put('/:id', async (request, response, next) => {
   }
 });
 
+blogsRouter.get('/:id/comments', async (request, response) => {
+  const blogId = request.params.id;
+  if (!blogId) {
+    return response
+      .status(400)
+      .json({ error: 'Invalid ID' });
+  }
+
+  const blog = await Blog.findById(blogId);
+  if (!blog) {
+    return response
+      .status(404)
+      .end();
+  }
+
+  const { comments } = blog;
+
+  return response
+    .status(200)
+    .json(comments);
+});
+
+blogsRouter.post('/:id/comments', async (request, response) => {
+  const blogToUpdateId = request.params.id;
+  const { content } = request.body;
+
+  if (!blogToUpdateId || !content) {
+    return response
+      .status(400)
+      .end();
+  }
+
+  const commentedBlog = await Blog.findById(blogToUpdateId);
+
+  if (!commentedBlog) {
+    return response
+      .status(404)
+      .end();
+  }
+
+  commentedBlog.comments = commentedBlog.comments.concat(content);
+  await commentedBlog.save();
+
+  return response
+    .status(201)
+    .json(commentedBlog);
+});
+
 module.exports = blogsRouter;
