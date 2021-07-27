@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Route, Switch } from 'react-router-dom';
+import Blog from './components/Blog';
 import Home from './components/Home';
 import IndividualUser from './components/IndividualUser';
 import LoggedUserInfo from './components/LoggedUserInfo';
@@ -31,6 +32,7 @@ const App = () => {
             <Switch>
               <Route path="/users/:id" component={IndividualUser} />
               <Route path="/users" component={Users} />
+              <Route path="/blogs/:id" component={Blog} />
               <Route path="/" component={Home} />
             </Switch>
           </>

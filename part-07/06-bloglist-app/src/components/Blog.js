@@ -1,29 +1,21 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
 import { deleteBlog, likeBlog } from '../reducers/blogsReducer';
 import { setNotification } from '../reducers/notificationReducer';
-import Togglable from './Togglable';
 
-const Blog = ({ blog }) => {
-  const {
-    author,
-    title,
-    url,
-    likes,
-    user,
-  } = blog;
-
+const Blog = () => {
+  const { id } = useParams();
   const dispatch = useDispatch();
-  const loggedUser = useSelector((state) => state.loggedUser);
 
-  const blogStyle = {
-    border: '2px solid #CCCCCC',
-    borderRadius: '10px',
-    margin: '1rem',
-    maxWidth: '400px',
-    padding: '1rem',
-  };
+  const loggedUser = useSelector((state) => state.loggedUser);
+  const blogs = useSelector((state) => state.blogs);
+  const blog = blogs.find((b) => b.id === id);
+
+  const {
+    title, author, likes, url, user,
+  } = blog;
 
   function deleteSelectedBlog() {
     // eslint-disable-next-line no-alert
@@ -61,32 +53,33 @@ const Blog = ({ blog }) => {
     return null;
   }
 
+  if (!blog) {
+    return null;
+  }
+
   return (
     <React.StrictMode>
       <>
-        <div style={blogStyle} className="blog">
-          { `${title} ${author}` }
+        <h2>{ `${title} by ${author}` }</h2>
 
-          <Togglable
-            showButtonLabel="View details"
-            hideButtonLabel="Hide details"
+        <p className="url">
+          {'URL: '}
+          <a href={url}>{url}</a>
+        </p>
+
+        <p className="likes">
+          { `Likes: ${likes}` }
+          <button
+            id="likes-button"
+            type="button"
+            className="likesButton"
+            onClick={() => dispatch(likeBlog(blog))}
           >
-            <p className="url">{`URL: ${url}`}</p>
-            <p className="likes">
-              { `Likes: ${likes}` }
-              <button
-                id="likes-button"
-                type="button"
-                className="likesButton"
-                onClick={() => dispatch(likeBlog(blog))}
-              >
-                Like
-              </button>
-            </p>
-            { user ? <p>{ `User: ${user.name}` }</p> : '' }
-            {showDeleteButton()}
-          </Togglable>
-        </div>
+            Like
+          </button>
+        </p>
+        { user ? <p>{ `User: ${user.name}` }</p> : '' }
+        {showDeleteButton()}
       </>
     </React.StrictMode>
   );
