@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Route, Switch } from 'react-router-dom';
 import Home from './components/Home';
+import IndividualUser from './components/IndividualUser';
 import LoggedUserInfo from './components/LoggedUserInfo';
 import LoginForm from './components/LoginForm';
 import Notification from './components/Notification';
@@ -14,7 +15,7 @@ const App = () => {
 
   useEffect(() => {
     dispatch(verifyLoggedUser());
-  }, [dispatch]);
+  }, []);
 
   return (
     <>
@@ -28,6 +29,7 @@ const App = () => {
             <LoggedUserInfo />
 
             <Switch>
+              <Route path="/users/:id" component={IndividualUser} />
               <Route path="/users" component={Users} />
               <Route path="/" component={Home} />
             </Switch>
