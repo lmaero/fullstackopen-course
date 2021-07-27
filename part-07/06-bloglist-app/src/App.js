@@ -1,16 +1,14 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import AddBlogForm from './components/AddBlogForm';
-import BlogsList from './components/BlogsList';
+import { Route, Switch } from 'react-router-dom';
+import Home from './components/Home';
 import LoggedUserInfo from './components/LoggedUserInfo';
 import LoginForm from './components/LoginForm';
 import Notification from './components/Notification';
-import Togglable from './components/Togglable';
+import Users from './components/Users';
 import { verifyLoggedUser } from './reducers/loggedUserReducer';
 
 const App = () => {
-  const addBlogFormRef = useRef();
-
   const dispatch = useDispatch();
   const loggedUser = useSelector((state) => state.loggedUser);
 
@@ -19,31 +17,23 @@ const App = () => {
   }, [dispatch]);
 
   return (
-    <div>
+    <>
       <h1>Blogs App</h1>
-
       <Notification />
 
       { loggedUser === null
         ? <LoginForm />
         : (
-          <div>
+          <>
             <LoggedUserInfo />
 
-            <Togglable
-              showButtonLabel="Create new Blog"
-              hideButtonLabel="Cancel"
-              ref={addBlogFormRef}
-            >
-              <AddBlogForm
-                addBlogFormRef={addBlogFormRef}
-              />
-            </Togglable>
-
-            <BlogsList />
-          </div>
+            <Switch>
+              <Route path="/users" component={Users} />
+              <Route path="/" component={Home} />
+            </Switch>
+          </>
         ) }
-    </div>
+    </>
   );
 };
 
