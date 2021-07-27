@@ -1,11 +1,11 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { deleteBlog, likeBlog } from '../reducers/blogsReducer';
 import { setNotification } from '../reducers/notificationReducer';
 import Togglable from './Togglable';
 
-const Blog = ({ blog, loggedUser }) => {
+const Blog = ({ blog }) => {
   const {
     author,
     title,
@@ -15,6 +15,7 @@ const Blog = ({ blog, loggedUser }) => {
   } = blog;
 
   const dispatch = useDispatch();
+  const loggedUser = useSelector((state) => state.loggedUser);
 
   const blogStyle = {
     border: '2px solid #CCCCCC',
@@ -52,9 +53,9 @@ const Blog = ({ blog, loggedUser }) => {
   }
 
   function showDeleteButton() {
-    const blogUserName = user ? user.name : null;
+    const blogUserName = user ? user.username : null;
 
-    if (loggedUser.name === blogUserName) {
+    if (loggedUser.username === blogUserName) {
       return <button type="button" onClick={deleteSelectedBlog}>Delete</button>;
     }
     return null;
@@ -101,15 +102,8 @@ Blog.propTypes = {
     user: PropTypes.shape({
       name: PropTypes.string.isRequired,
       id: PropTypes.string,
+      username: PropTypes.string.isRequired,
     }),
-  }).isRequired,
-  blogs: PropTypes.shape({
-    content: PropTypes.string.isRequired,
-    filter: PropTypes.func.isRequired,
-  }).isRequired,
-  loggedUser: PropTypes.shape({
-    username: PropTypes.string.isRequired,
-    name: PropTypes.string.isRequired,
   }).isRequired,
 };
 

@@ -1,40 +1,23 @@
-import PropTypes from 'prop-types';
-import React, { useState } from 'react';
+import React from 'react';
 import { useDispatch } from 'react-redux';
-import { setNotification } from '../reducers/notificationReducer';
-import blogService from '../services/blogs';
-import loginService from '../services/login';
+import { loginUser } from '../reducers/loggedUserReducer';
 
-const LoginForm = ({ setUser }) => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+const LoginForm = () => {
   const dispatch = useDispatch();
 
-  const handleLogin = async (event) => {
+  const handleLogin = (event) => {
     event.preventDefault();
+    const eventObject = event;
 
-    try {
-      const loggedUser = await loginService.login({ username, password });
+    const username = eventObject.target.username.value;
+    const password = eventObject.target.password.value;
 
-      dispatch(setNotification({
-        message: `Logged in as ${username}`,
-        type: 'success',
-      }));
+    const credentials = { username, password };
 
-      window
-        .localStorage
-        .setItem('blogAppLoggedUser', JSON.stringify(loggedUser));
+    dispatch(loginUser(credentials));
 
-      blogService.setToken(loggedUser.token);
-      setUser(loggedUser);
-      setUsername('');
-      setPassword('');
-    } catch (error) {
-      dispatch(setNotification({
-        message: error.response.data.error,
-        type: 'error',
-      }));
-    }
+    eventObject.target.username.value = '';
+    eventObject.target.password.value = '';
   };
 
   return (
@@ -46,11 +29,9 @@ const LoginForm = ({ setUser }) => {
           <input
             id="username"
             name="username"
-            onChange={(event) => setUsername(event.target.value)}
             placeholder="Username..."
             required
             type="text"
-            value={username}
           />
 
           <br />
@@ -58,11 +39,9 @@ const LoginForm = ({ setUser }) => {
           <input
             id="password"
             name="password"
-            onChange={(event) => setPassword(event.target.value)}
             placeholder="Password..."
             required
             type="password"
-            value={password}
           />
 
           <br />
@@ -77,10 +56,6 @@ const LoginForm = ({ setUser }) => {
       </>
     </React.StrictMode>
   );
-};
-
-LoginForm.propTypes = {
-  setUser: PropTypes.func.isRequired,
 };
 
 export default LoginForm;

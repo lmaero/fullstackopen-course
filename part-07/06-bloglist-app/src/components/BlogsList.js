@@ -4,24 +4,18 @@ import { useDispatch, useSelector } from 'react-redux';
 import { initializeBlogs } from '../reducers/blogsReducer';
 import Blog from './Blog';
 
-const BlogsList = ({ loggedUser }) => {
+const BlogsList = () => {
   const dispatch = useDispatch();
   const blogs = useSelector((state) => state.blogs);
 
-  useEffect(() => { dispatch(initializeBlogs()); }, [dispatch]);
+  useEffect(() => { dispatch(initializeBlogs()); }, []);
 
   return (
     <>
       <h2>Blogs</h2>
       { blogs
         .sort((a, b) => b.likes - a.likes)
-        .map((blog) => (
-          <Blog
-            key={blog.id}
-            blog={blog}
-            loggedUser={loggedUser}
-          />
-        )) }
+        .map((blog) => <Blog key={blog.id} blog={blog} />)}
     </>
   );
 };
@@ -29,9 +23,7 @@ const BlogsList = ({ loggedUser }) => {
 BlogsList.propTypes = {
   blogs: PropTypes.shape({
     content: PropTypes.string.isRequired,
-    sort: PropTypes.func.isRequired,
   }).isRequired,
-  loggedUser: PropTypes.shape({ username: PropTypes.string.isRequired }).isRequired,
 };
 
 export default BlogsList;

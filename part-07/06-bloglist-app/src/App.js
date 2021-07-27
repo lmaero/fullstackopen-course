@@ -1,67 +1,34 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import AddBlogForm from './components/AddBlogForm';
 import BlogsList from './components/BlogsList';
+import LoggedUserInfo from './components/LoggedUserInfo';
 import LoginForm from './components/LoginForm';
 import Notification from './components/Notification';
 import Togglable from './components/Togglable';
-import { setNotification } from './reducers/notificationReducer';
-import blogService from './services/blogs';
+import { verifyLoggedUser } from './reducers/loggedUserReducer';
 
 const App = () => {
   const addBlogFormRef = useRef();
 
-  const [loggedUser, setLoggedUser] = useState(null);
-
   const dispatch = useDispatch();
-  const notification = useSelector((state) => state.notification);
+  const loggedUser = useSelector((state) => state.loggedUser);
 
   useEffect(() => {
-    const loggedUserJSON = window
-      .localStorage
-      .getItem('blogAppLoggedUser');
-
-    if (loggedUserJSON) {
-      const parsedLoggedUser = JSON.parse(loggedUserJSON);
-      setLoggedUser(parsedLoggedUser);
-      blogService.setToken(parsedLoggedUser.token);
-    }
-  }, []);
-
-  function handleLogout() {
-    window.localStorage.removeItem('blogAppLoggedUser');
-    setLoggedUser(null);
-
-    dispatch(setNotification({
-      message: 'Logged out',
-      type: 'success',
-    }));
-  }
+    dispatch(verifyLoggedUser());
+  }, [dispatch]);
 
   return (
     <div>
       <h1>Blogs App</h1>
 
-      { notification
-        ? <Notification notification={notification} />
-        : null }
+      <Notification />
 
       { loggedUser === null
-        ? (
-          <LoginForm
-            setUser={setLoggedUser}
-          />
-        )
+        ? <LoginForm />
         : (
           <div>
-            <p>{ `${loggedUser.username} logged in` }</p>
-            <button
-              id="log-out-button"
-              type="button"
-              onClick={handleLogout}
-            >
-              Log out
-            </button>
+            <LoggedUserInfo />
 
             <Togglable
               showButtonLabel="Create new Blog"
@@ -70,14 +37,12 @@ const App = () => {
             >
               <AddBlogForm
                 addBlogFormRef={addBlogFormRef}
-                loggedUser={loggedUser}
               />
             </Togglable>
 
-            <BlogsList loggedUser={loggedUser} />
+            <BlogsList />
           </div>
         ) }
-
     </div>
   );
 };

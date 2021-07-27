@@ -1,4 +1,5 @@
 import blogService from '../services/blogs';
+import { setNotification } from './notificationReducer';
 
 const blogsReducer = (state = [], action) => {
   switch (action.type) {
@@ -31,12 +32,24 @@ export const initializeBlogs = () => async (dispatch) => {
 };
 
 export const createBlog = (blogObject, loggedUser) => async (dispatch) => {
-  const newBlog = await blogService.create(blogObject);
+  try {
+    const newBlog = await blogService.create(blogObject);
 
-  dispatch({
-    type: 'ADD_BLOG',
-    data: { ...newBlog, user: { ...loggedUser, name: loggedUser.name } },
-  });
+    dispatch({
+      type: 'ADD_BLOG',
+      data: { ...newBlog, user: { ...loggedUser, name: loggedUser.name } },
+    });
+
+    dispatch(setNotification({
+      message: `A new blog ${newBlog.title} by ${newBlog.author} was added`,
+      type: 'success',
+    }));
+  } catch (error) {
+    dispatch(setNotification({
+      message: error.response.data.error,
+      type: 'error',
+    }));
+  }
 };
 
 export const likeBlog = (blogObject) => async (dispatch) => {
