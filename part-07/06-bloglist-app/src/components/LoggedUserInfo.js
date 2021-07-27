@@ -6,6 +6,10 @@ const LoggedUserInfo = () => {
   const dispatch = useDispatch();
   const loggedUser = useSelector((state) => state.loggedUser);
 
+  if (!loggedUser) {
+    return null;
+  }
+
   return (
     <React.StrictMode>
       <>

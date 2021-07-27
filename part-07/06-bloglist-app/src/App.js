@@ -4,8 +4,8 @@ import { Route, Switch } from 'react-router-dom';
 import Blog from './components/Blog';
 import Home from './components/Home';
 import IndividualUser from './components/IndividualUser';
-import LoggedUserInfo from './components/LoggedUserInfo';
 import LoginForm from './components/LoginForm';
+import Menu from './components/Menu';
 import Notification from './components/Notification';
 import Users from './components/Users';
 import { verifyLoggedUser } from './reducers/loggedUserReducer';
@@ -20,6 +20,8 @@ const App = () => {
 
   return (
     <>
+      <Menu />
+
       <h1>Blogs App</h1>
       <Notification />
 
@@ -27,8 +29,6 @@ const App = () => {
         ? <LoginForm />
         : (
           <>
-            <LoggedUserInfo />
-
             <Switch>
               <Route path="/users/:id" component={IndividualUser} />
               <Route path="/users" component={Users} />
