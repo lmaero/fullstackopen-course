@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import { deleteBlog, likeBlog } from '../reducers/blogsReducer';
+import { commentBlog, deleteBlog, likeBlog } from '../reducers/blogsReducer';
 import { setNotification } from '../reducers/notificationReducer';
 
 const Blog = () => {
@@ -57,6 +57,16 @@ const Blog = () => {
     return null;
   }
 
+  function createComment(event) {
+    event.preventDefault();
+    const eventObject = event;
+
+    const commentObject = { content: eventObject.target.comment.value };
+    dispatch(commentBlog(id, commentObject));
+
+    eventObject.target.comment.value = '';
+  }
+
   return (
     <React.StrictMode>
       <>
@@ -81,19 +91,23 @@ const Blog = () => {
         { user ? <p>{ `User: ${user.name}` }</p> : '' }
         { showDeleteButton() }
 
-        { blog.comments.length !== 0
-          ? (
-            <>
-              <h3>Comments</h3>
-              <ul>
-                {blog.comments
-                  .map((comment) => (
-                    <li key={comment}>{ comment }</li>
-                  )) }
-              </ul>
-            </>
-          )
-          : null }
+        <h3>Comments</h3>
+        <form onSubmit={createComment}>
+          <input
+            name="comment"
+            type="text"
+            placeholder="Comment..."
+            required
+          />
+
+          <button type="submit">Add</button>
+        </form>
+        <ul>
+          {blog.comments
+            .map((comment) => (
+              <li key={comment}>{ comment }</li>
+            )) }
+        </ul>
       </>
     </React.StrictMode>
   );

@@ -148,7 +148,7 @@ blogsRouter.post('/:id/comments', async (request, response) => {
   if (!blogToUpdateId || !content) {
     return response
       .status(400)
-      .end();
+      .send({ error: 'Invalid ID or content' });
   }
 
   const commentedBlog = await Blog.findById(blogToUpdateId);
@@ -156,7 +156,7 @@ blogsRouter.post('/:id/comments', async (request, response) => {
   if (!commentedBlog) {
     return response
       .status(404)
-      .end();
+      .send({ error: 'Blog does not exist' });
   }
 
   commentedBlog.comments = commentedBlog.comments.concat(content);

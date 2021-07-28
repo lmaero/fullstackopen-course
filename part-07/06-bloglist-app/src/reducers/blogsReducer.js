@@ -18,6 +18,12 @@ const blogsReducer = (state = [], action) => {
       return state
         .filter((blog) => blog.id !== deletedBlogId);
     }
+    case 'COMMENT_BLOG': {
+      const commentedBlog = action.data;
+      return state
+        .map((blog) => (blog.id === commentedBlog.id ? commentedBlog : blog));
+    }
+
     default:
       return state;
   }
@@ -77,6 +83,27 @@ export const deleteBlog = (blogObject) => async (dispatch) => {
     type: 'DELETE_BLOG',
     data: blogObject,
   });
+};
+
+export const commentBlog = (blogId, comment) => async (dispatch) => {
+  try {
+    const commentedBlog = await blogService.commentBlog(blogId, comment);
+
+    dispatch({
+      type: 'COMMENT_BLOG',
+      data: commentedBlog,
+    });
+
+    dispatch(setNotification({
+      message: `A new comment was added to the blog ${commentedBlog.title}`,
+      type: 'success',
+    }));
+  } catch (error) {
+    dispatch(setNotification({
+      message: error.response.data.error,
+      type: 'error',
+    }));
+  }
 };
 
 export default blogsReducer;
