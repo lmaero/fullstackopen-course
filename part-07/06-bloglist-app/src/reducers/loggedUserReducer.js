@@ -54,7 +54,7 @@ export const loginUser = (credentials) => async (dispatch) => {
     });
 
     dispatch(setNotification({
-      message: 'Logged in as ',
+      message: `Welcome ${loggedUser.name}`,
       type: 'success',
     }));
   } catch (error) {

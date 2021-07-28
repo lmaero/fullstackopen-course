@@ -1,15 +1,23 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { createBlog } from '../reducers/blogsReducer';
 
-const AddBlogForm = ({ addBlogFormRef }) => {
+const AddBlogForm = () => {
+  const createFormContainerStyles = 'flex flex-col items-center w-auto shadow-md p-5 rounded-lg m-auto h-full';
+
+  const createFormStyles = 'flex items-center space-y-2';
+
+  const inputStyles = 'bg-green-50 p-3 pl-6 pr-6 rounded-full text-green-600 font-semibold focus:outline-none focus:ring focus:border-green-300 m-2';
+
+  const createButtonStyles = 'px-20 py-4 text-sm text-green-600 font-semibold rounded-full border border-green-200 hover:text-white hover:bg-green-600 hover:border-transparent focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2 uppercase';
+
+  const title = 'uppercase font-bold text-black text-xl ml-5';
+
   const dispatch = useDispatch();
   const loggedUser = useSelector((state) => state.loggedUser);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    addBlogFormRef.current.toggleVisibility();
 
     const eventObject = event;
 
@@ -30,52 +38,54 @@ const AddBlogForm = ({ addBlogFormRef }) => {
   return (
     <React.StrictMode>
       <>
-        <h2>Create new Blog</h2>
-        <form onSubmit={handleSubmit}>
-          {'Title: '}
-          <input
-            id="BlogTitle"
-            name="BlogTitle"
-            required
-            type="text"
-          />
+        <div className={createFormContainerStyles}>
+          <h2 className={title}>Create new Blog</h2>
+          <form className={createFormStyles} onSubmit={handleSubmit}>
+            <input
+              id="BlogTitle"
+              name="BlogTitle"
+              required
+              type="text"
+              className={inputStyles}
+              placeholder="Title"
+            />
 
-          <br />
+            <br />
 
-          {'Author: '}
-          <input
-            id="BlogAuthor"
-            name="BlogAuthor"
-            required
-            type="text"
-          />
+            <input
+              id="BlogAuthor"
+              name="BlogAuthor"
+              required
+              type="text"
+              className={inputStyles}
+              placeholder="Author"
+            />
 
-          <br />
+            <br />
 
-          {'URL: '}
-          <input
-            id="BlogURL"
-            name="BlogURL"
-            required
-            type="url"
-          />
+            <input
+              id="BlogURL"
+              name="BlogURL"
+              required
+              type="url"
+              className={inputStyles}
+              placeholder="URL"
+            />
 
-          <br />
+            <br />
 
-          <button
-            id="create-blog-button"
-            type="submit"
-          >
-            Create
-          </button>
-        </form>
+            <button
+              className={createButtonStyles}
+              type="submit"
+              id="create-blog-button"
+            >
+              Create
+            </button>
+          </form>
+        </div>
       </>
     </React.StrictMode>
   );
-};
-
-AddBlogForm.propTypes = {
-  addBlogFormRef: PropTypes.func.isRequired,
 };
 
 export default AddBlogForm;

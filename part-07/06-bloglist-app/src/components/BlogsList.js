@@ -8,26 +8,24 @@ const BlogsList = () => {
   const dispatch = useDispatch();
   const blogs = useSelector((state) => state.blogs);
 
-  useEffect(() => { dispatch(initializeBlogs()); }, []);
+  const title = 'm-5 text-center uppercase font-bold text-black text-xl ml-5';
+  const blogCardsContainer = 'grid grid-cols-4';
+  const blogCard = 'uppercase font-light bg-green-50 p-3 m-3 border-t-4 border-green-300 rounded hover:text-black hover:bg-green-100 transition duration-500';
 
-  const blogStyle = {
-    border: '2px solid #CCCCCC',
-    borderRadius: '10px',
-    margin: '1rem',
-    maxWidth: '400px',
-    padding: '1rem',
-  };
+  useEffect(() => { dispatch(initializeBlogs()); }, []);
 
   return (
     <>
-      <h2>Blogs</h2>
-      { blogs
-        .sort((a, b) => b.likes - a.likes)
-        .map((blog) => (
-          <Link to={`/blogs/${blog.id}`}>
-            <p style={blogStyle}>{ blog.title }</p>
-          </Link>
-        )) }
+      <h2 className={title}>Blogs</h2>
+      <div className={blogCardsContainer}>
+        { blogs
+          .sort((a, b) => b.likes - a.likes)
+          .map((blog) => (
+            <Link to={`/blogs/${blog.id}`}>
+              <p className={blogCard}>{ blog.title }</p>
+            </Link>
+          )) }
+      </div>
     </>
   );
 };

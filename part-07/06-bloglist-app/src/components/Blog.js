@@ -13,6 +13,21 @@ const Blog = () => {
   const blogs = useSelector((state) => state.blogs);
   const blog = blogs.find((b) => b.id === id);
 
+  const mainTitleStyles = 'm-5 text-center uppercase font-bold text-black text-xl ml-5';
+
+  const secondaryTitleStyles = 'm-5 text-center uppercase font-bold text-black text-xl ml-5';
+
+  const infoStylesContainer = 'bg-green-50 w-1/4 m-auto rounded p-5 flex flex-col space-y-5';
+  const buttonStyles = 'p-2 m-2 text-sm text-green-600 font-semibold rounded border border-green-200 hover:text-white hover:bg-green-600 hover:border-transparent focus:outline-none focus:ring-green-600 focus:ring-offset-2 uppercase';
+  const cancelButtonStyles = 'p-2 m-2 text-sm text-red-600 font-semibold rounded border border-red-200 hover:text-white hover:bg-red-600 hover:border-transparent focus:outline-none focus:ring-red-600 focus:ring-offset-2 uppercase w-36 self-center';
+  const inputStyles = 'bg-green-50 p-3 pl-6 pr-6 rounded-full text-green-600 font-semibold focus:outline-none focus:ring focus:border-green-300 m-2';
+  const commentsContainerStyles = 'flex flex-col m-auto w-1/2 space-y-2 items-center';
+  const commentsList = 'flex flex-col space-y-3 text-gray-400';
+
+  if (!blog) {
+    return null;
+  }
+
   const {
     title, author, likes, url, user,
   } = blog;
@@ -48,12 +63,8 @@ const Blog = () => {
     const blogUserName = user ? user.username : null;
 
     if (loggedUser.username === blogUserName) {
-      return <button type="button" onClick={deleteSelectedBlog}>Delete</button>;
+      return <button className={cancelButtonStyles} type="button" onClick={deleteSelectedBlog}>Delete</button>;
     }
-    return null;
-  }
-
-  if (!blog) {
     return null;
   }
 
@@ -70,44 +81,50 @@ const Blog = () => {
   return (
     <React.StrictMode>
       <>
-        <h2>{ `${title} by ${author}` }</h2>
+        <h2 className={mainTitleStyles}>{ `${title} by ${author}` }</h2>
 
-        <p className="url">
-          {'URL: '}
-          <a href={url}>{url}</a>
-        </p>
+        <div className={infoStylesContainer}>
+          <p className="url">
+            {'URL: '}
+            <a href={url}>{url}</a>
+          </p>
 
-        <p className="likes">
-          { `Likes: ${likes}` }
-          <button
-            id="likes-button"
-            type="button"
-            className="likesButton"
-            onClick={() => dispatch(likeBlog(blog))}
-          >
-            Like
-          </button>
-        </p>
-        { user ? <p>{ `User: ${user.name}` }</p> : '' }
-        { showDeleteButton() }
+          <p className="likes">
+            { `Likes: ${likes}` }
+            <button
+              className={buttonStyles}
+              id="likes-button"
+              type="button"
+              onClick={() => dispatch(likeBlog(blog))}
+            >
+              Like
+            </button>
+          </p>
+          { user ? <p>{ `User: ${user.name}` }</p> : '' }
+          { showDeleteButton() }
+        </div>
 
-        <h3>Comments</h3>
-        <form onSubmit={createComment}>
-          <input
-            name="comment"
-            type="text"
-            placeholder="Comment..."
-            required
-          />
+        <h3 className={secondaryTitleStyles}>Comments</h3>
 
-          <button type="submit">Add</button>
-        </form>
-        <ul>
-          {blog.comments
-            .map((comment) => (
-              <li key={comment}>{ comment }</li>
-            )) }
-        </ul>
+        <div className={commentsContainerStyles}>
+          <form onSubmit={createComment}>
+            <input
+              className={inputStyles}
+              name="comment"
+              type="text"
+              placeholder="Comment..."
+              required
+            />
+
+            <button className={buttonStyles} type="submit">Add</button>
+          </form>
+          <ul className={commentsList}>
+            {blog.comments
+              .map((comment) => (
+                <li key={comment}>{ comment }</li>
+              )) }
+          </ul>
+        </div>
       </>
     </React.StrictMode>
   );

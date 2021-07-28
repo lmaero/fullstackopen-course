@@ -3,10 +3,14 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@craco/craco": "^6.2.0",
     "@testing-library/user-event": "^13.2.0",
+    "autoprefixer": "^9.8.6",
     "axios": "^0.21.1",
     "prop-types": "^15.7.2",
+    "postcss": "^7.0.36",
     "react": "^17.0.2",
+    "tailwindcss": "npm:@tailwindcss/postcss7-compat@^2.2.7",
     "react-dom": "^17.0.2",
     "react-redux": "^7.2.4",
     "react-router-dom": "^5.2.0",
@@ -17,9 +21,9 @@
     "web-vitals": "^2.1.0"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
+    "start": "craco start",
+    "build": "craco build",
+    "test": "craco test",
     "eject": "react-scripts eject",
     "lint": "eslint .",
     "cypress:open": "cypress open"

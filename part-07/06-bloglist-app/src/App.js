@@ -22,7 +22,6 @@ const App = () => {
     <>
       <Menu />
 
-      <h1>Blogs App</h1>
       <Notification />
 
       { loggedUser === null
