@@ -5,7 +5,7 @@ import { ADD_BOOK, ALL_AUTHORS, ALL_BOOKS } from '../queries';
 
 const NewBook = ({ show }) => {
   const [title, setTitle] = useState('');
-  const [author, setAuhtor] = useState('');
+  const [author, setAuthor] = useState('');
   const [published, setPublished] = useState('');
   const [genre, setGenre] = useState('');
   const [genres, setGenres] = useState([]);
@@ -31,7 +31,7 @@ const NewBook = ({ show }) => {
 
     setTitle('');
     setPublished('');
-    setAuhtor('');
+    setAuthor('');
     setGenres([]);
     setGenre('');
   };
@@ -55,7 +55,7 @@ const NewBook = ({ show }) => {
           Author
           <input
             value={author}
-            onChange={({ target }) => setAuhtor(target.value)}
+            onChange={({ target }) => setAuthor(target.value)}
           />
         </div>
         <div>
