@@ -24,7 +24,6 @@ const Authors = ({ show }) => {
       }
     });
 
-    setName('');
     setBorn('');
   };
 
@@ -33,6 +32,10 @@ const Authors = ({ show }) => {
   }
 
   const authors = result.data.allAuthors;
+
+  function handleSetName(e) {
+    setName(e.target.value);
+  }
 
   return (
     <div>
@@ -62,13 +65,13 @@ const Authors = ({ show }) => {
       <h3>Set birthyear</h3>
 
       <form onSubmit={submit}>
-        <div>
-          Name
-          <input
-            value={name}
-            onChange={({ target }) => setName(target.value)}
-          />
-        </div>
+        <select value={name} onChange={handleSetName}>
+          { authors.map((author) => (
+            <option key={author.name} value={author.name}>
+              {author.name}
+            </option>
+          ))}
+        </select>
         <div>
           Born
           <input
