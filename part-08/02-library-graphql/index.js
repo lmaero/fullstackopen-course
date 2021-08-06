@@ -40,7 +40,7 @@ const typeDefs = gql`
   type Query {
     bookCount: Int!
     authorCount: Int!
-    allBooks: [Book]
+    allBooks(genres:[String!]): [Book]
     allAuthors: [Author]
   }
 
@@ -63,12 +63,21 @@ const resolvers = {
     bookCount: () => Book.countDocuments(),
     authorCount: () => Author.countDocuments(),
     allAuthors: () => Author.find({}),
+    allBooks: async (root, args) => {
+      let filteredBooks = await Book.find({});
 
-    // TODO: Implement filters for books
-    allBooks: () => Book.find({}),
+      if (args.genres) {
+        filteredBooks = await Book.find({ genres: { $in: args.genres } });
+      }
+
+      return filteredBooks;
+    },
   },
 
-  // TODO: Implement Authors bookCount
+  Author: {
+    bookCount: (root) => Book.countDocuments({ author: root.id }),
+  },
+
   Mutation: {
     addBook: async (root, args) => {
       const { title, published, genres } = args;
@@ -98,7 +107,17 @@ const resolvers = {
       return book.save();
     },
 
-    // TODO: Implement editAuthor mutation
+    editAuthor: async (root, args) => {
+      const { name, setBornTo } = args;
+      const author = await Author.findOne({ name });
+
+      if (!author) {
+        throw new Error(`Author ${name} not found`);
+      }
+
+      author.born = setBornTo;
+      return author.save();
+    },
   },
 };
 
