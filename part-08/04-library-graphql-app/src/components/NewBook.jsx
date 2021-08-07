@@ -3,13 +3,16 @@ import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 import { ADD_BOOK, ALL_AUTHORS, ALL_BOOKS } from '../queries';
 
-const NewBook = ({ show }) => {
+const NewBook = ({ show, setPage }) => {
   const [title, setTitle] = useState('');
   const [author, setAuthor] = useState('');
   const [published, setPublished] = useState('');
   const [genre, setGenre] = useState('');
   const [genres, setGenres] = useState([]);
   const [addBook] = useMutation(ADD_BOOK, {
+    onError: (error) => {
+      console.log(error);
+    },
     refetchQueries: [
       { query: ALL_AUTHORS },
       { query: ALL_BOOKS }
@@ -34,6 +37,7 @@ const NewBook = ({ show }) => {
     setAuthor('');
     setGenres([]);
     setGenre('');
+    setPage('books');
   };
 
   const addGenre = () => {
@@ -43,6 +47,7 @@ const NewBook = ({ show }) => {
 
   return (
     <div>
+      <h2>Add Book</h2>
       <form onSubmit={submit}>
         <div>
           Title
@@ -86,6 +91,7 @@ const NewBook = ({ show }) => {
 
 NewBook.propTypes = {
   show: PropTypes.bool.isRequired,
+  setPage: PropTypes.func.isRequired
 };
 
 export default NewBook;
