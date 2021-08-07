@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 import { ADD_BOOK, ALL_AUTHORS, ALL_BOOKS } from '../queries';
 
-const NewBook = ({ show, setPage }) => {
+const NewBook = ({ show, setPage, updateCacheWith }) => {
   const [title, setTitle] = useState('');
   const [author, setAuthor] = useState('');
   const [published, setPublished] = useState('');
@@ -12,6 +12,9 @@ const NewBook = ({ show, setPage }) => {
   const [addBook] = useMutation(ADD_BOOK, {
     onError: (error) => {
       console.log(error);
+    },
+    update: (store, response) => {
+      updateCacheWith(response.data.addBook);
     },
     refetchQueries: [
       { query: ALL_AUTHORS },
@@ -91,7 +94,8 @@ const NewBook = ({ show, setPage }) => {
 
 NewBook.propTypes = {
   show: PropTypes.bool.isRequired,
-  setPage: PropTypes.func.isRequired
+  setPage: PropTypes.func.isRequired,
+  updateCacheWith: PropTypes.func.isRequired
 };
 
 export default NewBook;
