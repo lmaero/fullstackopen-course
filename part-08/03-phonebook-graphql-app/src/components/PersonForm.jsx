@@ -1,9 +1,9 @@
 import { useMutation } from '@apollo/client';
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
-import { ALL_PERSONS, CREATE_PERSON } from '../queries';
+import { CREATE_PERSON } from '../queries';
 
-const PersonForm = ({ setError }) => {
+const PersonForm = ({ setError, updateCacheWith }) => {
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
   const [street, setStreet] = useState('');
@@ -14,14 +14,7 @@ const PersonForm = ({ setError }) => {
       setError(error.graphQLErrors[0].message);
     },
     update: (store, response) => {
-      const dataInStore = store.readQuery({ query: ALL_PERSONS });
-      store.writeQuery({
-        query: ALL_PERSONS,
-        data: {
-          ...dataInStore,
-          allPersons: [...dataInStore.allPersons, response.data.addPerson]
-        }
-      });
+      updateCacheWith(response.data.addPerson);
     }
   });
 
@@ -86,7 +79,8 @@ const PersonForm = ({ setError }) => {
 };
 
 PersonForm.propTypes = {
-  setError: PropTypes.func.isRequired
+  setError: PropTypes.func.isRequired,
+  updateCacheWith: PropTypes.func.isRequired
 };
 
 export default PersonForm;
