@@ -160,6 +160,7 @@ const resolvers = {
         throw new UserInputError(error.message);
       }
       pubsub.publish('BOOK_ADDED', { bookAdded: book });
+      return book;
     },
 
     editAuthor: async (root, args, context) => {

@@ -17,6 +17,7 @@ const App = () => {
   }, [token]);
 
   const updateCacheWith = (addedBook) => {
+    console.log(addedBook);
     const includedIn = (set, object) => set.map((b) => b.id).includes(object.id);
 
     const dataInStore = client.readQuery({ query: ALL_BOOKS });
