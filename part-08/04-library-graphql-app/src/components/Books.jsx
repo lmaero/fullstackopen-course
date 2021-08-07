@@ -4,17 +4,17 @@ import React from 'react';
 import { ALL_BOOKS } from '../queries';
 
 const Books = ({ show }) => {
-  const result = useQuery(ALL_BOOKS);
+  const { loading, data } = useQuery(ALL_BOOKS);
 
   if (!show) {
     return null;
   }
 
-  if (result.loading) {
+  if (loading) {
     return <div>loading...</div>;
   }
 
-  const books = result.data.allBooks;
+  const books = data.allBooks;
 
   return (
     <div>
@@ -31,11 +31,11 @@ const Books = ({ show }) => {
               Published
             </th>
           </tr>
-          {books.map((a) => (
-            <tr key={a.title}>
-              <td>{a.title}</td>
-              <td>{a.author}</td>
-              <td>{a.published}</td>
+          {books.map((book) => (
+            <tr key={book.title}>
+              <td>{book.title}</td>
+              <td>{book.author.name}</td>
+              <td>{book.published}</td>
             </tr>
           ))}
         </tbody>
