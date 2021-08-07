@@ -4,8 +4,8 @@ import React, { useEffect, useState } from 'react';
 import { FIND_PERSON } from '../queries';
 
 const Persons = ({ persons }) => {
-  const [person, setPerson] = useState(null);
   const [getPerson, result] = useLazyQuery(FIND_PERSON);
+  const [person, setPerson] = useState(null);
 
   const showPerson = (name) => {
     getPerson({ variables: { nameToSearch: name } });
@@ -15,7 +15,7 @@ const Persons = ({ persons }) => {
     if (result.data) {
       setPerson(result.data.findPerson);
     }
-  }, [result.data]);
+  }, [result]);
 
   if (person) {
     return (
@@ -27,7 +27,12 @@ const Persons = ({ persons }) => {
           {person.address.city}
         </div>
         <div>{person.phone}</div>
-        <button type="button" onClick={() => setPerson(null)}>close</button>
+        <button
+          type="button"
+          onClick={() => setPerson(null)}
+        >
+          close
+        </button>
       </div>
     );
   }
@@ -40,7 +45,10 @@ const Persons = ({ persons }) => {
           {p.name}
           {' '}
           {p.phone}
-          <button type="button" onClick={() => showPerson(p.name)}>
+          <button
+            type="button"
+            onClick={() => showPerson(p.name)}
+          >
             show address
           </button>
         </div>

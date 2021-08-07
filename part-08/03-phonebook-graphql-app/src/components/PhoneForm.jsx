@@ -3,15 +3,15 @@ import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
 import { EDIT_NUMBER } from '../queries';
 
-const PhoneForm = ({ notify }) => {
+const PhoneForm = ({ setError }) => {
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
 
   const [changeNumber, result] = useMutation(EDIT_NUMBER);
 
   useEffect(() => {
-    if (result.data && !result.data.editNumber) {
-      notify('name not found');
+    if (result.data && result.data.editNumber === null) {
+      setError('person not found');
     }
   }, [result.data]);
 
@@ -52,7 +52,7 @@ const PhoneForm = ({ notify }) => {
 };
 
 PhoneForm.propTypes = {
-  notify: PropTypes.func.isRequired,
+  setError: PropTypes.func.isRequired,
 };
 
 export default PhoneForm;
