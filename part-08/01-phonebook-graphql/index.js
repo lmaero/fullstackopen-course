@@ -1,10 +1,11 @@
 const {
-  ApolloServer,
-  UserInputError,
-  AuthenticationError,
-  gql,
+  ApolloServer, UserInputError, AuthenticationError, gql,
 } = require('apollo-server');
 const jwt = require('jsonwebtoken');
+
+const { PubSub } = require('apollo-server');
+
+const pubsub = new PubSub();
 
 const mongoose = require('mongoose');
 const Person = require('./models/person');
@@ -72,10 +73,24 @@ const typeDefs = gql`
       street: String!
       city: String!
     ): Person
-    editNumber(name: String!, phone: String!): Person
-    createUser(username: String!): User
-    login(username: String!, password: String!): Token
-    addAsFriend(name: String!): User
+    editNumber(
+      name: String!
+      phone: String!
+    ): Person
+    createUser(
+      username: String!
+    ): User
+    login(
+      username: String!
+      password: String!
+    ): Token
+    addAsFriend(
+      name: String!
+    ): User
+  }
+
+  type Subscription {
+    personAdded: Person!
   }
 `;
 
@@ -117,6 +132,8 @@ const resolvers = {
         });
       }
 
+      pubsub.publish('PERSON_ADDED', { personAdded: person });
+
       return person;
     },
     editNumber: async (root, args) => {
@@ -134,11 +151,12 @@ const resolvers = {
     createUser: (root, args) => {
       const user = new User({ username: args.username });
 
-      return user.save().catch((error) => {
-        throw new UserInputError(error.message, {
-          invalidArgs: args,
+      return user.save()
+        .catch((error) => {
+          throw new UserInputError(error.message, {
+            invalidArgs: args,
+          });
         });
-      });
     },
     login: async (root, args) => {
       const user = await User.findOne({ username: args.username });
@@ -172,6 +190,12 @@ const resolvers = {
       return currentUser;
     },
   },
+
+  Subscription: {
+    personAdded: {
+      subscribe: () => pubsub.asyncIterator(['PERSON_ADDED']),
+    },
+  },
 };
 
 const server = new ApolloServer({
@@ -180,16 +204,18 @@ const server = new ApolloServer({
   context: async ({ req }) => {
     const auth = req ? req.headers.authorization : null;
     if (auth && auth.toLowerCase().startsWith('bearer ')) {
-      const decodedToken = jwt.verify(auth.substring(7), JWT_SECRET);
-      const currentUser = await User.findById(decodedToken.id).populate(
-        'friends',
+      const decodedToken = jwt.verify(
+        auth.substring(7), JWT_SECRET,
       );
+      const currentUser = await User
+        .findById(decodedToken.id).populate('friends');
       return { currentUser };
     }
-    return null;
+    return {};
   },
 });
 
-server.listen().then(({ url }) => {
+server.listen().then(({ url, subscriptionsUrl }) => {
   console.log(`Server ready at ${url}`);
+  console.log(`Subscriptions ready at ${subscriptionsUrl}`);
 });
