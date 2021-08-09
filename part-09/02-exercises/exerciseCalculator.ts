@@ -1,3 +1,28 @@
+interface calculateExercisesValues {
+  dailyHours: number[]
+  target: number
+}
+
+const parseExercisesArguments = (args: string[]): calculateExercisesValues => {
+  if (args.length < 4) throw new Error('Use this program with the following arguments: npm run calculateExercises <yourDailyTarget> <dailyHoursOfExercise, ...>');
+
+  const interestedInArgs = args.slice(2);
+  const toNumbers = interestedInArgs.map(number => Number(number));
+  const areNumbers = toNumbers.every(number => !isNaN(number));
+
+  if (!areNumbers) throw new Error('The arguments must be numbers');
+
+  if (interestedInArgs.length === 1) throw new Error('Please don\'t be lazy and specify daily hours of exercise');
+
+  const target = Number(interestedInArgs[ 0 ]);
+  const dailyHours = interestedInArgs.map(Number).slice(1);
+
+  return {
+    dailyHours,
+    target
+  };
+}
+
 interface Result {
   periodLength: number;
   trainingDays: number;
@@ -8,7 +33,7 @@ interface Result {
   average: number;
 }
 
-const calculateExercises = (dailyHours: number[], target: number): Result => {
+const calculateExercises = (target: number, dailyHours: number[]): Result => {
   const periodLength = dailyHours.length
   const trainingDays = dailyHours.filter(days => days > 0).length
   const average = dailyHours.reduce((a, b) => a + b, 0) / periodLength
@@ -50,4 +75,11 @@ const calculateExercises = (dailyHours: number[], target: number): Result => {
   }
 }
 
-console.log(calculateExercises([ 3, 0, 2, 4.5, 0, 3, 1 ], 2))
+try {
+  const args = process.argv
+  const { target, dailyHours } = parseExercisesArguments(args)
+  const result = calculateExercises(target, dailyHours)
+  console.log(result)
+} catch (e) {
+  console.error(e.message)
+}
