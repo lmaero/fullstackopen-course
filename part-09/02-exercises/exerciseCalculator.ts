@@ -48,6 +48,7 @@ const calculateExercises = (target: number, dailyHours: number[]): Result => {
     } else if (success && trainingDays > 0) {
       return 2
     }
+    return 0
   }
   const rating = calculateRating(success, trainingDays, periodLength)
 
@@ -60,6 +61,7 @@ const calculateExercises = (target: number, dailyHours: number[]): Result => {
       case 3:
         return 'Excellent, keep working like that!'
       default:
+        return 'Something went wrong'
     }
   }
   const ratingDescription = calculateRatingDescription(rating)
