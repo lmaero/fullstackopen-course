@@ -1,0 +1,18 @@
+{
+  "name": "02-body-mass",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "ts-node": "ts-node",
+    "calculateBmi": "ts-node -- bmiCalculator.ts",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "ts-node": "^10.2.0",
+    "typescript": "^4.3.5"
+  }
+}
