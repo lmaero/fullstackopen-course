@@ -1,0 +1,6 @@
+{
+  "eslint.workingDirectories": [
+    "./part-09/03-flight-history",
+    "./part-09/04-patientor-backend"
+  ]
+}
