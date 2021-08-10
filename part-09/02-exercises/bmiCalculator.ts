@@ -4,15 +4,15 @@ interface BmiValues {
 }
 
 const parseBmiArguments = (args: string[]): BmiValues => {
-  if (args.length < 4 || args.length > 4) throw new Error('Use this program with the following arguments: npm run calculateBmi <height> <weight>');
+  if (args.length < 2 || args.length > 2) throw new Error('Use this program with the following arguments: <height> <weight>');
 
-  if (isNaN(Number(args[ 2 ])) && isNaN(Number(args[ 3 ]))) {
+  if (isNaN(Number(args[ 0 ])) && isNaN(Number(args[ 1 ]))) {
     throw new Error('Provided values were not numbers!');
 
   }
 
-  let height = Number(args[ 2 ]);
-  let weight = Number(args[ 3 ]);
+  let height = Number(args[ 0 ]);
+  let weight = Number(args[ 1 ]);
 
   // According to Wikipedia
   const tallestPersonInTheWorld = 272;
@@ -30,8 +30,8 @@ const parseBmiArguments = (args: string[]): BmiValues => {
   }
 
   return {
-    height: Number(args[ 2 ]),
-    weight: Number(args[ 3 ])
+    height: Number(args[ 0 ]),
+    weight: Number(args[ 1 ])
   }
 }
 
@@ -50,10 +50,4 @@ const calculateBmi = (height: number, weight: number): string => {
   }
 }
 
-try {
-  const bmiValues = parseBmiArguments(process.argv);
-  console.log(bmiValues)
-  console.log(calculateBmi(bmiValues.height, bmiValues.weight));
-} catch (e) {
-  console.log(e.message);
-}
+export { parseBmiArguments, calculateBmi };
