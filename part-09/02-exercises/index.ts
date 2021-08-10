@@ -12,13 +12,13 @@ app.get('/bmi', (req, res) => {
   if (!weight || !height) {
     return res
       .status(400)
-      .json({ error: 'Missing parameters' })
+      .json({ error: 'Missing parameters' });
   }
 
   if (isNaN(Number(weight)) || isNaN(Number(height))) {
     return res
       .status(400)
-      .json({ error: 'Malformatted parameters' })
+      .json({ error: 'Malformatted parameters' });
   }
 
   try {
@@ -27,14 +27,17 @@ app.get('/bmi', (req, res) => {
       weight: bmiValues.weight,
       height: bmiValues.height,
       bmi: calculateBmi(bmiValues.height, bmiValues.weight)
-    }
+    };
     return res
       .status(200)
-      .json(bmiInfo)
+      .json(bmiInfo);
   } catch (e) {
-    return response.status(400).json(e.message);
+    if (e instanceof TypeError) {
+      return response.status(400).json(e.message);
+    }
+    return res.json(e);
   }
-})
+});
 
 const PORT = 3000;
 app.listen(PORT, () => {

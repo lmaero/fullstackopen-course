@@ -21,7 +21,7 @@ const parseExercisesArguments = (args: string[]): calculateExercisesValues => {
     dailyHours,
     target
   };
-}
+};
 
 interface Result {
   periodLength: number;
@@ -34,37 +34,37 @@ interface Result {
 }
 
 const calculateExercises = (target: number, dailyHours: number[]): Result => {
-  const periodLength = dailyHours.length
-  const trainingDays = dailyHours.filter(days => days > 0).length
-  const average = dailyHours.reduce((a, b) => a + b, 0) / periodLength
+  const periodLength = dailyHours.length;
+  const trainingDays = dailyHours.filter(days => days > 0).length;
+  const average = dailyHours.reduce((a, b) => a + b, 0) / periodLength;
 
-  const success = average >= target
+  const success = average >= target;
 
   const calculateRating = (success: boolean, trainingDays: number, periodLength: number): number => {
     if (!success) {
-      return 1
+      return 1;
     } else if (success && trainingDays === periodLength) {
-      return 3
+      return 3;
     } else if (success && trainingDays > 0) {
-      return 2
+      return 2;
     }
-    return 0
-  }
-  const rating = calculateRating(success, trainingDays, periodLength)
+    return 0;
+  };
+  const rating = calculateRating(success, trainingDays, periodLength);
 
   const calculateRatingDescription = (rating: number): string => {
     switch (rating) {
       case 1:
-        return 'We know starting is hard'
+        return 'We know starting is hard';
       case 2:
-        return 'You can improve your discipline!'
+        return 'You can improve your discipline!';
       case 3:
-        return 'Excellent, keep working like that!'
+        return 'Excellent, keep working like that!';
       default:
-        return 'Something went wrong'
+        return 'Something went wrong';
     }
-  }
-  const ratingDescription = calculateRatingDescription(rating)
+  };
+  const ratingDescription = calculateRatingDescription(rating);
 
   return {
     periodLength,
@@ -74,14 +74,16 @@ const calculateExercises = (target: number, dailyHours: number[]): Result => {
     ratingDescription,
     target,
     average,
-  }
-}
+  };
+};
 
 try {
-  const args = process.argv
-  const { target, dailyHours } = parseExercisesArguments(args)
-  const result = calculateExercises(target, dailyHours)
-  console.log(result)
+  const args = process.argv;
+  const { target, dailyHours } = parseExercisesArguments(args);
+  const result = calculateExercises(target, dailyHours);
+  console.log(result);
 } catch (e) {
-  console.error(e.message)
+  if (e instanceof Error) {
+    console.error(e.message);
+  }
 }

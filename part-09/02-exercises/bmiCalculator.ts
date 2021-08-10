@@ -11,8 +11,8 @@ const parseBmiArguments = (args: string[]): BmiValues => {
 
   }
 
-  let height = Number(args[ 0 ]);
-  let weight = Number(args[ 1 ]);
+  const height = Number(args[ 0 ]);
+  const weight = Number(args[ 1 ]);
 
   // According to Wikipedia
   const tallestPersonInTheWorld = 272;
@@ -32,8 +32,8 @@ const parseBmiArguments = (args: string[]): BmiValues => {
   return {
     height: Number(args[ 0 ]),
     weight: Number(args[ 1 ])
-  }
-}
+  };
+};
 
 const calculateBmi = (height: number, weight: number): string => {
   const heightInMeters = height / 100;
@@ -48,6 +48,6 @@ const calculateBmi = (height: number, weight: number): string => {
   } else {
     return "Obese (Your health is in risk) ";
   }
-}
+};
 
 export { parseBmiArguments, calculateBmi };
