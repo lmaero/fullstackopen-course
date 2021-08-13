@@ -1,13 +1,12 @@
-import React from "react";
-import axios from "axios";
-import { BrowserRouter as Router, Route, Link, Switch } from "react-router-dom";
-import { Button, Divider, Header, Container } from "semantic-ui-react";
-
-import { apiBaseUrl } from "./constants";
-import { useStateValue } from "./state";
-import { Patient } from "./types";
-
-import PatientListPage from "./PatientListPage";
+import axios from 'axios';
+import React from 'react';
+import { BrowserRouter as Router, Link, Route, Switch } from 'react-router-dom';
+import { Button, Container, Divider, Header } from 'semantic-ui-react';
+import IndividualPatient from './components/IndividualPatient';
+import { apiBaseUrl } from './constants';
+import PatientListPage from './PatientListPage';
+import { useStateValue } from './state';
+import { Patient } from './types';
 
 const App = () => {
   const [, dispatch] = useStateValue();
@@ -17,9 +16,9 @@ const App = () => {
     const fetchPatientList = async () => {
       try {
         const { data: patientListFromApi } = await axios.get<Patient[]>(
-          `${apiBaseUrl}/patients`
+          `${apiBaseUrl}/patients`,
         );
-        dispatch({ type: "SET_PATIENT_LIST", payload: patientListFromApi });
+        dispatch({ type: 'SET_PATIENT_LIST', payload: patientListFromApi });
       } catch (e) {
         console.error(e);
       }
@@ -28,18 +27,17 @@ const App = () => {
   }, [dispatch]);
 
   return (
-    <div className="App">
+    <div className='App'>
       <Router>
         <Container>
-          <Header as="h1">Patientor</Header>
-          <Button as={Link} to="/" primary>
+          <Header as='h1'>Patientor</Header>
+          <Button as={Link} to='/' primary>
             Home
           </Button>
           <Divider hidden />
           <Switch>
-            <Route path="/">
-              <PatientListPage />
-            </Route>
+            <Route path='/patients/:id' component={IndividualPatient} />
+            <Route path='/' component={PatientListPage} />
           </Switch>
         </Container>
       </Router>

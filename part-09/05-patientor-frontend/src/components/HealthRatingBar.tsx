@@ -15,8 +15,8 @@ const HEALTHBAR_TEXTS = [
 
 const HealthRatingBar = ({ rating, showText }: BarProps) => {
   return (
-    <div className="health-bar">
-      {<Rating icon="heart" disabled rating={4 - rating} maxRating={4} />}
+    <div className='health-bar'>
+      {<Rating icon='heart' disabled rating={4 - rating} maxRating={4} />}
       {showText ? <p>{HEALTHBAR_TEXTS[rating]}</p> : null}
     </div>
   );
