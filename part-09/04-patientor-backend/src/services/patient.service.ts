@@ -8,6 +8,10 @@ const getPatients = (): Array<PatientEntry> => {
   return patients;
 };
 
+const getPatient = (id: string): PatientEntry | undefined => {
+  return patients.find(patient => patient.id === id);
+};
+
 const addPatient = (entry: NewPatientEntry): PatientEntry => {
   const id:string = uuid();
   const newPatientEntry = {
@@ -21,5 +25,6 @@ const addPatient = (entry: NewPatientEntry): PatientEntry => {
 
 export default {
   getPatients,
+  getPatient,
   addPatient
 };
