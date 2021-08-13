@@ -1,9 +1,7 @@
 import React from "react";
-import { ContentProps } from "../types/courseParts";
+import { CoursePart } from "../types/courseParts";
 
-const Total = (props: ContentProps) => {
-  const { courseParts } = props;
-
+const Total = ({ courseParts }: { courseParts: CoursePart[] }) => {
   return (
     <React.StrictMode>
       <React.Fragment>
