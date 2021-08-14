@@ -44,7 +44,6 @@ router.post('/:id/entries', (req, res) => {
       date: `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`,
     });
     const addedEntry = patientService.addEntry(patient, newEntry);
-    console.log(patient);
     return res.status(201).send(addedEntry);
   } catch (error) {
     return res.status(400).send(error.message);

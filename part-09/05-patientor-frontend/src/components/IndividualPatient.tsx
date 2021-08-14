@@ -1,10 +1,12 @@
 import axios from 'axios';
 import React, { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { Icon } from 'semantic-ui-react';
+import { Button, Icon } from 'semantic-ui-react';
+import { EntryFormValues } from '../AddEntryModal/AddEntryForm';
+import AddEntryModal from '../AddEntryModal/AddEntryModal';
 import { apiBaseUrl } from '../constants';
-import { setDiagnoses, setPatient, useStateValue } from '../state';
-import { Diagnosis, Patient } from '../types';
+import { addEntry, setDiagnoses, setPatient, useStateValue } from '../state';
+import { Diagnosis, Entry, Patient } from '../types';
 import EntryDetails from './Entries';
 
 const IconGender = ({ patient }: { patient: Patient }) => {
@@ -16,6 +18,16 @@ const IconGender = ({ patient }: { patient: Patient }) => {
 const IndividualUser = () => {
   const [{ patient, diagnoses }, dispatch] = useStateValue();
   const { id } = useParams<{ id: string }>();
+
+  const [modalOpen, setModalOpen] = React.useState<boolean>(false);
+  const [error, setError] = React.useState<string | undefined>();
+
+  const openModal = (): void => setModalOpen(true);
+
+  const closeModal = (): void => {
+    setModalOpen(false);
+    setError(undefined);
+  };
 
   useEffect(() => {
     if (!patient || patient.id !== id) {
@@ -59,6 +71,20 @@ const IndividualUser = () => {
     return diagnoses.find((diagnose) => diagnose.code === code);
   }
 
+  const submitNewEntry = async (values: EntryFormValues) => {
+    try {
+      const { data: newEntry } = await axios.post<Entry>(
+        `${apiBaseUrl}/patients/${id}/entries`,
+        values,
+      );
+      dispatch(addEntry(patient, newEntry));
+      closeModal();
+    } catch (e) {
+      console.error(e.response?.data || 'Unknown Error');
+      setError(e.response?.data?.error || 'Unknown error');
+    }
+  };
+
   return (
     <React.StrictMode>
       <>
@@ -67,6 +93,15 @@ const IndividualUser = () => {
         </h2>
         <p>SSN: {patient.ssn}</p>
         <p>Occupation: {patient.occupation}</p>
+
+        <Button onClick={() => openModal()}>Add New Entry</Button>
+
+        <AddEntryModal
+          modalOpen={modalOpen}
+          onSubmit={submitNewEntry}
+          error={error}
+          onClose={closeModal}
+        />
 
         {patient.entries.length !== 0 && (
           <>

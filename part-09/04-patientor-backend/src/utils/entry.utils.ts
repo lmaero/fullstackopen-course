@@ -1,9 +1,4 @@
-import {
-  Discharge,
-  Entry,
-  HealthCheckRating,
-  SickLeave,
-} from '../types/entries.types';
+import { Discharge, Entry, HealthCheckRating } from '../types/entries.types';
 
 const isString = (text: unknown): text is string => {
   return typeof text === 'string' || text instanceof String;
@@ -42,11 +37,6 @@ const parseDischarge = (discharge: unknown): Discharge => {
   return discharge as Discharge;
 };
 
-const parseSickLeave = (sickLeave: unknown): SickLeave => {
-  if (!sickLeave) throw new Error('You should supply a sickLeave');
-  return sickLeave as SickLeave;
-};
-
 const parseHealthCheckRating = (
   healthCheckRating: unknown,
 ): HealthCheckRating => {
@@ -77,7 +67,6 @@ const toNewEntry = ({
   diagnosisCodes,
   discharge,
   employerName,
-  sickLeave,
   healthCheckRating,
 }: Fields): Entry => {
   const baseProps = {
@@ -101,7 +90,6 @@ const toNewEntry = ({
         ...baseProps,
         type: 'OccupationalHealthcare',
         employerName: parseStrings(employerName),
-        sickLeave: parseSickLeave(sickLeave),
       };
     case 'HealthCheck':
       return {
