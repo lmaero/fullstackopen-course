@@ -1,17 +1,17 @@
 export enum Gender {
-  Male = "male",
-  Female = "female",
-  NonBinary = "non-binary",
+  Male = 'male',
+  Female = 'female',
+  NonBinary = 'non-binary',
 }
 
-export type DiaryEntryExcludingSSN = Omit<PatientEntry, "ssn" | "entries">;
+export type DiaryEntryExcludingSSN = Omit<Patient, 'ssn' | 'entries'>;
 
-export type NewPatientEntry = Omit<PatientEntry, "id">;
+export type NewPatientEntry = Omit<Patient, 'id'>;
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface Entry {}
 
-export interface PatientEntry {
+export interface Patient {
   id: string;
   name: string;
   ssn: string;

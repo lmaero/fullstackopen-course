@@ -1,7 +1,7 @@
-import { Gender, NewPatientEntry } from "../types/patient.types";
+import { Gender, NewPatientEntry } from '../types/patient.types';
 
 const isString = (text: unknown): text is string => {
-  return typeof text === "string" || text instanceof String;
+  return typeof text === 'string' || text instanceof String;
 };
 
 const parseStrings = (string: unknown): string => {
@@ -45,7 +45,7 @@ const toNewPatientEntry = ({
     ssn: parseStrings(ssn),
     gender: parseGender(gender),
     occupation: parseStrings(occupation),
-    entries: []
+    entries: [],
   };
 
   return newEntry;
