@@ -2,6 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { v1 as uuid } from 'uuid';
 import patients from '../../data/patients.data';
+import { Entry } from '../types/entries.types';
 import { NewPatientEntry, Patient } from '../types/patient.types';
 
 const getPatients = (): Array<Patient> => {
@@ -23,8 +24,14 @@ const addPatient = (entry: NewPatientEntry): Patient => {
   return newPatientEntry;
 };
 
+const addEntry = (patient: Patient, newEntry: Entry): Entry => {
+  patient.entries.push(newEntry);
+  return newEntry;
+};
+
 export default {
   getPatients,
   getPatient,
   addPatient,
+  addEntry,
 };
