@@ -44,6 +44,30 @@ const IndividualUser = () => {
         </h2>
         <p>SSN: {patient.ssn}</p>
         <p>Occupation: {patient.occupation}</p>
+
+        {patient.entries.length !== 0 && (
+          <>
+            <h3>Entries</h3>
+            {patient.entries.map((entry) => (
+              <>
+                <p key={entry.id}>
+                  {entry.date} {entry.description}
+                </p>
+
+                {entry.diagnosisCodes && (
+                  <>
+                    <h4>Diagnosis Codes:</h4>
+                    <ul>
+                      {entry.diagnosisCodes.map((code) => (
+                        <li key={code}>{code}</li>
+                      ))}
+                    </ul>
+                  </>
+                )}
+              </>
+            ))}
+          </>
+        )}
       </>
     </React.StrictMode>
   );
