@@ -3,8 +3,8 @@ import React, { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { Icon } from 'semantic-ui-react';
 import { apiBaseUrl } from '../constants';
-import { setPatient, useStateValue } from '../state';
-import { Patient } from '../types';
+import { setDiagnoses, setPatient, useStateValue } from '../state';
+import { Diagnosis, Patient } from '../types';
 
 const IconGender = ({ patient }: { patient: Patient }) => {
   if (patient.gender === 'male') return <Icon name='mars' />;
@@ -13,7 +13,7 @@ const IconGender = ({ patient }: { patient: Patient }) => {
 };
 
 const IndividualUser = () => {
-  const [{ patient }, dispatch] = useStateValue();
+  const [{ patient, diagnoses }, dispatch] = useStateValue();
   const { id } = useParams<{ id: string }>();
 
   useEffect(() => {
@@ -32,8 +32,30 @@ const IndividualUser = () => {
     }
   }, [dispatch]);
 
+  useEffect(() => {
+    const fetchDiagnoses = async () => {
+      try {
+        const { data: diagnosesFromApi } = await axios.get<Diagnosis[]>(
+          `${apiBaseUrl}/diagnoses`,
+        );
+        dispatch(setDiagnoses(diagnosesFromApi));
+      } catch (e) {
+        console.error(e);
+      }
+    };
+    void fetchDiagnoses();
+  }, [dispatch]);
+
   if (!patient) {
     return <p>Loading...</p>;
+  }
+
+  if (!diagnoses) {
+    return <p>Loading...</p>;
+  }
+
+  function getDiagnosis(code: string) {
+    return diagnoses.find((diagnose) => diagnose.code === code);
   }
 
   return (
@@ -59,7 +81,9 @@ const IndividualUser = () => {
                     <h4>Diagnosis Codes:</h4>
                     <ul>
                       {entry.diagnosisCodes.map((code) => (
-                        <li key={code}>{code}</li>
+                        <li key={code}>
+                          {code} {getDiagnosis(code)?.name}
+                        </li>
                       ))}
                     </ul>
                   </>
