@@ -3,7 +3,7 @@ import React, { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { Icon } from 'semantic-ui-react';
 import { apiBaseUrl } from '../constants';
-import { useStateValue } from '../state';
+import { setPatient, useStateValue } from '../state';
 import { Patient } from '../types';
 
 const IconGender = ({ patient }: { patient: Patient }) => {
@@ -17,15 +17,13 @@ const IndividualUser = () => {
   const { id } = useParams<{ id: string }>();
 
   useEffect(() => {
-    void axios.get<void>(`${apiBaseUrl}/ping`);
-
     if (!patient || patient.id !== id) {
       const fetchPatient = async () => {
         try {
           const { data: patientFromApi } = await axios.get<Patient>(
             `${apiBaseUrl}/patients/${id}`,
           );
-          dispatch({ type: 'SET_PATIENT', payload: patientFromApi });
+          dispatch(setPatient(patientFromApi));
         } catch (e) {
           console.error(e);
         }

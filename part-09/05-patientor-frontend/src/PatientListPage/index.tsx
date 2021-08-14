@@ -6,7 +6,7 @@ import AddPatientModal from '../AddPatientModal';
 import { PatientFormValues } from '../AddPatientModal/AddPatientForm';
 import HealthRatingBar from '../components/HealthRatingBar';
 import { apiBaseUrl } from '../constants';
-import { useStateValue } from '../state';
+import { addPatient, useStateValue } from '../state';
 import { Patient } from '../types';
 
 const PatientListPage = () => {
@@ -28,7 +28,7 @@ const PatientListPage = () => {
         `${apiBaseUrl}/patients`,
         values,
       );
-      dispatch({ type: 'ADD_PATIENT', payload: newPatient });
+      dispatch(addPatient(newPatient));
       closeModal();
     } catch (e) {
       console.error(e.response?.data || 'Unknown Error');
