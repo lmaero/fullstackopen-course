@@ -1,3 +1,4 @@
+import { Entry } from '../types/entries.types';
 import { Gender, NewPatientEntry } from '../types/patient.types';
 
 const isString = (text: unknown): text is string => {
@@ -29,7 +30,7 @@ type Fields = {
   ssn: unknown;
   gender: unknown;
   occupation: unknown;
-  entries: unknown;
+  entries: Entry[];
 };
 
 const toNewPatientEntry = ({
@@ -38,6 +39,7 @@ const toNewPatientEntry = ({
   ssn,
   gender,
   occupation,
+  entries,
 }: Fields): NewPatientEntry => {
   const newEntry: NewPatientEntry = {
     name: parseStrings(name),
@@ -45,7 +47,7 @@ const toNewPatientEntry = ({
     ssn: parseStrings(ssn),
     gender: parseGender(gender),
     occupation: parseStrings(occupation),
-    entries: [],
+    entries,
   };
 
   return newEntry;

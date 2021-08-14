@@ -1,3 +1,5 @@
+import { Entry } from './entries.types';
+
 export enum Gender {
   Male = 'male',
   Female = 'female',
@@ -7,9 +9,6 @@ export enum Gender {
 export type DiaryEntryExcludingSSN = Omit<Patient, 'ssn' | 'entries'>;
 
 export type NewPatientEntry = Omit<Patient, 'id'>;
-
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface Entry {}
 
 export interface Patient {
   id: string;
