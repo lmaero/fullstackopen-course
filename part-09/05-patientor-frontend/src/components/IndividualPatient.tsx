@@ -5,6 +5,7 @@ import { Icon } from 'semantic-ui-react';
 import { apiBaseUrl } from '../constants';
 import { setDiagnoses, setPatient, useStateValue } from '../state';
 import { Diagnosis, Patient } from '../types';
+import EntryDetails from './Entries';
 
 const IconGender = ({ patient }: { patient: Patient }) => {
   if (patient.gender === 'male') return <Icon name='mars' />;
@@ -71,24 +72,11 @@ const IndividualUser = () => {
           <>
             <h3>Entries</h3>
             {patient.entries.map((entry) => (
-              <>
-                <p key={entry.id}>
-                  {entry.date} {entry.description}
-                </p>
-
-                {entry.diagnosisCodes && (
-                  <>
-                    <h4>Diagnosis Codes:</h4>
-                    <ul>
-                      {entry.diagnosisCodes.map((code) => (
-                        <li key={code}>
-                          {code} {getDiagnosis(code)?.name}
-                        </li>
-                      ))}
-                    </ul>
-                  </>
-                )}
-              </>
+              <EntryDetails
+                key={entry.id}
+                entry={entry}
+                getDiagnosis={getDiagnosis}
+              />
             ))}
           </>
         )}
